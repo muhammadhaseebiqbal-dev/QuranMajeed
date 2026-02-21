@@ -1,7 +1,7 @@
 # Quran Majeed (قرآن مجید)
 
 <div align="center">
-  <img src="app/src/main/assets/QuranMajeed_logo.png" alt="Quran Majeed Logo" width="128" />
+  <img src="app/src/main/assets/QuranMajeed_logo.png" alt="Quran Majeed Logo" width="256" />
   
   <br/>
   
@@ -49,15 +49,29 @@
 
 Because **Quran Majeed** respects user privacy and avoids tracking, it is designed perfectly for open-source stores.
 
-### 1. IzzyOnDroid
+### 1. F-Droid (Main)
+*Submission is currently pending in the main F-Droid repository.*
+
+<a href="#">
+  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">
+</a>
+
+### 2. IzzyOnDroid
 You can download the latest official release directly from IzzyOnDroid.
 *(Link will be available here once approved by the Izzy repo)*
 
-### 2. GitHub Releases (Direct APK)
-If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our [Releases Page](../../releases).
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.haseeb.quranapp">
+  <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="60">
+</a>
 
-### 3. F-Droid (Main)
-*Submission is currently pending in the main F-Droid repository.*
+### 3. GitHub Releases (Direct APK)
+If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our Releases Page.
+
+<a href="https://github.com/muhammadhaseebiqbal-dev/QuranMajeed/releases/latest">
+  <img src="https://img.shields.io/badge/Download-GitHub_Releases-181717?style=for-the-badge&logo=github&logoColor=white" alt="Download from GitHub" height="40">
+</a>
+
+
 
 ---
 
