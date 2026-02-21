@@ -101,6 +101,13 @@ class AudioViewModel @Inject constructor(
     fun togglePlayWithTranslation(enabled: Boolean) {
         userPrefs.playWithTranslation = enabled
         _playWithTranslation.value = enabled
+        
+        // If a Surah is currently active, immediately reload playback to reflect the toggle
+        val activeSurahId = _currentSurahId.value
+        if (activeSurahId != null) {
+            val safeAyahIndex = if (_currentAyahIndex.value >= 0) _currentAyahIndex.value else 0
+            playSurah(activeSurahId, safeAyahIndex)
+        }
     }
 
     fun playSurah(surahId: Int, startAyahIndex: Int = 0) {

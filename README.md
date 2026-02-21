@@ -1,7 +1,7 @@
 # Quran Majeed (قرآن مجید)
 
 <div align="center">
-  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" alt="Quran Majeed Logo" width="128" />
+  <img src="app/src/main/assets/QuranMajeed_logo.png" alt="Quran Majeed Logo" width="128" />
   
   <br/>
   
@@ -29,11 +29,10 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <!-- Replace these placeholder URLs with links to your actual repository screenshots once uploaded -->
-  <img src="https://via.placeholder.com/250x500.png?text=Home+Screen" width="200"/>
-  <img src="https://via.placeholder.com/250x500.png?text=Surah+Reader" width="200"/>
-  <img src="https://via.placeholder.com/250x500.png?text=Audio+Player" width="200"/>
-  <img src="https://via.placeholder.com/250x500.png?text=Settings+Menu" width="200"/>
+  <img src="app/src/main/assets/screenshots/1.jpg" width="200"/>
+  <img src="app/src/main/assets/screenshots/2.jpg" width="200"/>
+  <img src="app/src/main/assets/screenshots/3.jpg" width="200"/>
+  <img src="app/src/main/assets/screenshots/4.jpg" width="200"/>
 </div>
 
 ---
