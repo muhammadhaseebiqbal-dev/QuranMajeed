@@ -1,0 +1,38 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+
+# Android Studio auto-generated files
+app/build/
+
+# Signing files
+*.jks
+*.keystore
+keystore
+
+# Memory Dumps
+*.hprof
+
+# Log Files
+*.log
+
+# Node tools (for our dev environment)
+node_modules/
+package-lock.json
+
+# Test API JS/Postman scripts
+debug_api_keys.js
+test_api.js
+*.js
