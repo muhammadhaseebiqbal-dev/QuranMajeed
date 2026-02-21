@@ -1,0 +1,12 @@
+We are incredibly proud to present **Quran Majeed (قرآن مجید)**!
+
+This application was built entirely from the ground up prioritizing privacy, elegance, and offline-first capabilities. Unlike many other apps, Quran Majeed contains **zero tracking**, **zero ads**, and relies on **zero proprietary services** (like Google Play Services).
+
+### ✨ Key Features
+* **Distraction-Free Reading:** A beautiful, infinite-scrolling Surah reader with authentic Indo-Pak style Arabic typography.
+* **Smart Audio Player:** Interleaved Ayah-by-Ayah audio playback that automatically scrolls the screen as you listen.
+* **Premium Offline Capabilities:** Once you open a Surah, its Arabic text, Urdu/English Translations, and Tafsir are cached locally for offline reading.
+* **Daily Hadith Widget:** A stunning, native Android homescreen widget that delivers a new Hadith every day, running entirely on local background workers.
+* **Multiple Localizations:** Includes renowned translations like *Urdu (Jalandhry)*, *Urdu (Tahir ul Qadri)*, *English (Saheeh International)*, and Tafsirs like *Tafsir Ibn Kathir*.
+* **World-Renowned Reciters:** Listen to beautiful recitations from *Saud Ash-Shuraym*, *Mishari Rashid Al-Afasy*, *AbdulBaset AbdulSamad*, and more.
+* **Juz/Parah Support:** Navigate the Quran easily by Surah or by Juz using intuitive swipeable tabs.
