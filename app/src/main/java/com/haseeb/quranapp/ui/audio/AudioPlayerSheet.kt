@@ -93,7 +93,7 @@ fun AudioPlayerSheet(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Seekbar with smooth animation
+            // Seekbar: smooth animation during playback, instant response during drag
             var isDragging by remember { mutableStateOf(false) }
             var dragValue by remember { mutableStateOf(0f) }
             
@@ -101,23 +101,27 @@ fun AudioPlayerSheet(
             val displayValue = if (isDragging) dragValue else rawProgress
             val animatedValue by animateFloatAsState(
                 targetValue = displayValue,
-                animationSpec = tween(durationMillis = if (isDragging) 0 else 80),
+                animationSpec = tween(durationMillis = if (isDragging) 0 else 150),
                 label = "seekbar"
             )
             
-            WavySlider(
+            com.haseeb.quranapp.ui.components.WavySeekbar(
                 value = animatedValue,
                 onValueChange = { newVal ->
                     isDragging = true
                     dragValue = newVal
-                    val newPos = (newVal * duration.toFloat()).toLong()
-                    viewModel.seekTo(newPos)
                 },
                 onValueChangeFinished = {
+                    // Commit the seek only when user releases the thumb
+                    val finalPos = (dragValue * duration.toFloat()).toLong()
+                    viewModel.seekTo(finalPos)
                     isDragging = false
                     viewModel.onSeekFinished()
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                activeColor = MaterialTheme.colorScheme.primary,
+                inactiveColor = MaterialTheme.colorScheme.surfaceVariant,
+                thumbColor = MaterialTheme.colorScheme.primary
             )
             
             // Time Labels

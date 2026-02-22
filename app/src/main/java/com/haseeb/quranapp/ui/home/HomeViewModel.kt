@@ -15,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val repository: QuranRepository,
-    private val userPrefs: com.haseeb.quranapp.data.local.prefs.UserPreferences
+    private val userPrefs: com.haseeb.quranapp.data.local.prefs.UserPreferences,
+    val downloadManager: com.haseeb.quranapp.data.download.SurahDownloadManager
 ) : ViewModel() {
 
     private val _surahs = MutableStateFlow<List<SurahEntity>>(emptyList())

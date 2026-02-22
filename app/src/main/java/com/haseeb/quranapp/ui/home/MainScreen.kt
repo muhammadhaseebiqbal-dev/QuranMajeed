@@ -5,13 +5,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Pause
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,8 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.haseeb.quranapp.data.local.entity.SurahEntity
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import com.haseeb.quranapp.data.download.SurahDownloadManager
+import com.haseeb.quranapp.data.download.DownloadStatus
+import com.haseeb.quranapp.data.download.DownloadState
+import com.haseeb.quranapp.ui.audio.AudioUtils
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
 
@@ -47,10 +47,17 @@ fun MainScreen(
     val error by viewModel.error.collectAsState()
     val bookmarkedSurahId by viewModel.bookmarkedSurahId.collectAsState()
     val bookmarkedAyahNum by viewModel.bookmarkedAyahNum.collectAsState()
+
+    // Download Manager (injected via HomeViewModel)
+    val downloadManager = viewModel.downloadManager
+    val downloadStates by downloadManager.downloadStates.collectAsState()
     
     // Refresh bookmarks on resume
     androidx.compose.runtime.LaunchedEffect(Unit) {
         viewModel.refreshBookmarks()
+        // Start auto-download in background after a short delay
+        kotlinx.coroutines.delay(5000)
+        downloadManager.startAutoDownload()
     }
 
     // Tab and Pager State
@@ -58,7 +65,7 @@ fun MainScreen(
     val pagerState = rememberPagerState(pageCount = { tabs.size })
     val coroutineScope = rememberCoroutineScope()
 
-    // Load Hadith (Simulated)
+    // Load Hadith (Bilingual)
     val context = androidx.compose.ui.platform.LocalContext.current
     val hadith = androidx.compose.runtime.remember {
         try {
@@ -71,9 +78,9 @@ fun MainScreen(
             val array = org.json.JSONArray(json)
             val randomIndex = (0 until array.length()).random()
             val obj = array.getJSONObject(randomIndex)
-            Pair(obj.getString("text"), obj.getString("source"))
+            Triple(obj.getString("text"), obj.optString("text_ur", ""), obj.getString("source"))
         } catch (e: Exception) {
-            Pair("Be kind to your parents.", "Quran 17:23")
+            Triple("Be kind to your parents.", "اپنے والدین سے حسن سلوک کرو۔", "Quran 17:23")
         }
     }
 
@@ -153,7 +160,7 @@ fun MainScreen(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Daily Hadith",
+                            text = "Daily Hadith | حدیثِ مبارکہ",
                             style = MaterialTheme.typography.labelMedium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
@@ -163,9 +170,19 @@ fun MainScreen(
                             style = MaterialTheme.typography.bodyMedium,
                             fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
                         )
+                        if (hadith.second.isNotEmpty()) {
+                            Spacer(modifier = Modifier.height(6.dp))
+                            Text(
+                                text = "\"${hadith.second}\"",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f),
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.End
+                            )
+                        }
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "- ${hadith.second}",
+                            text = "- ${hadith.third}",
                             style = MaterialTheme.typography.labelSmall,
                             modifier = Modifier.align(Alignment.End)
                         )
@@ -209,11 +226,15 @@ fun MainScreen(
                             contentPadding = PaddingValues(16.dp),
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
-                            items(
+                        items(
                                 items = surahs,
                                 key = { it.id }
                             ) { surah ->
-                                SurahItem(surah = surah, onClick = { onSurahClick(surah.id) })
+                                SurahItem(
+                                    surah = surah,
+                                    onClick = { onSurahClick(surah.id) },
+                                    downloadManager = downloadManager
+                                )
                             }
                         }
                     } else {
@@ -225,7 +246,11 @@ fun MainScreen(
                         ) {
                             items(30) { index ->
                                 val juzId = index + 1
-                                JuzItem(juzId = juzId, onClick = { onJuzClick(juzId) })
+                                JuzItem(
+                                    juzId = juzId,
+                                    onClick = { onJuzClick(juzId) },
+                                    downloadManager = downloadManager
+                                )
                             }
                         }
                     }
@@ -236,7 +261,7 @@ fun MainScreen(
 }
 
 @Composable
-fun JuzItem(juzId: Int, onClick: () -> Unit) {
+fun JuzItem(juzId: Int, onClick: () -> Unit, downloadManager: SurahDownloadManager? = null) {
     val juzNames = listOf(
         "Alm", "Sayaqool", "Tilkal Rusul", "Lan Tana Loo", "Wal Mohsanat",
         "La Yuhibbullah", "Wa Iza Samiu", "Wa Lau Annana", "Qalal Malao", "Wa A'lamu",
@@ -298,16 +323,25 @@ fun JuzItem(juzId: Int, onClick: () -> Unit) {
             // Arabic Name
             Text(
                 text = juzArabicNames.getOrElse(juzId - 1) { "" },
-                style = MaterialTheme.typography.headlineSmall, // Larger font for Arabic
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Default, // Should use custom Arabic font eventually
+                style = MaterialTheme.typography.headlineSmall,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Default,
                 color = MaterialTheme.colorScheme.primary
             )
+            
+            // Download Button would require mapping Juz to Surahs, so we skip for Juz
         }
     }
 }
 
 @Composable
-fun SurahItem(surah: SurahEntity, onClick: () -> Unit) {
+fun SurahItem(surah: SurahEntity, onClick: () -> Unit, downloadManager: SurahDownloadManager? = null) {
+    val downloadStates = if (downloadManager != null) {
+        downloadManager.downloadStates.collectAsState().value
+    } else {
+        emptyMap()
+    }
+    val state = downloadStates[surah.id]
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -317,7 +351,7 @@ fun SurahItem(surah: SurahEntity, onClick: () -> Unit) {
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp, end = 8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -355,10 +389,53 @@ fun SurahItem(surah: SurahEntity, onClick: () -> Unit) {
             // Arabic Name
             Text(
                 text = surah.nameArabic,
-                style = MaterialTheme.typography.headlineSmall, // Larger font for Arabic
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Default, // Should use custom Arabic font eventually
+                style = MaterialTheme.typography.headlineSmall,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Default,
                 color = MaterialTheme.colorScheme.primary
             )
+            
+            Spacer(modifier = Modifier.width(4.dp))
+            
+            // Download Button / Progress / Checkmark
+            if (downloadManager != null) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    when (state?.status) {
+                        DownloadStatus.DOWNLOADING -> {
+                            com.haseeb.quranapp.ui.components.WavyCircularProgress(
+                                progress = state.progress,
+                                modifier = Modifier.size(28.dp),
+                                strokeWidth = 2.5.dp,
+                                progressColor = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.surfaceVariant
+                            )
+                        }
+                        DownloadStatus.COMPLETED -> {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = "Downloaded",
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        else -> {
+                            IconButton(
+                                onClick = { downloadManager.downloadSurah(surah.id) },
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = "Download Surah",
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

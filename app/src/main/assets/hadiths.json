@@ -1,18 +1,296 @@
 [
   {
-    "source": "Sahih Bukhari",
-    "text": "The reward of deeds depends upon the intentions and every person will get the reward according to what he has intended."
+    "id": 1,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 1",
+    "text": "Actions are judged by intentions, so each man will have what he intended. Thus, he whose migration was to Allah and His Messenger, his migration is to Allah and His Messenger; but he whose migration was for some worldly thing he might gain, or for a wife he might marry, his migration is to that for which he migrated.",
+    "text_ur": "اعمال کا دارومدار نیتوں پر ہے اور ہر شخص کو وہی ملے گا جس کی اس نے نیت کی۔ پس جس کی ہجرت اللہ اور اس کے رسول کی طرف ہو تو اس کی ہجرت اللہ اور اس کے رسول کی طرف ہے اور جس کی ہجرت دنیا حاصل کرنے یا کسی عورت سے شادی کرنے کے لیے ہو تو اس کی ہجرت اسی کی طرف ہے جس کی طرف اس نے ہجرت کی۔"
   },
   {
+    "id": 2,
     "source": "Sahih Muslim",
-    "text": "The strong man is not the one who is good at wrestling, but the strong man is the one who controls himself in a fit of rage."
+    "reference": "Nawawi 40, Hadith 2",
+    "text": "Islam is to testify that there is no god but Allah and Muhammad is the Messenger of Allah, to establish prayer, to pay zakat, to fast in Ramadan, and to make pilgrimage to the House if you are able. Iman is to believe in Allah, His angels, His books, His messengers, the Last Day, and to believe in divine destiny, both the good and the evil thereof. Ihsan is to worship Allah as though you see Him, and if you cannot see Him, then indeed He sees you.",
+    "text_ur": "اسلام یہ ہے کہ تو گواہی دے کہ اللہ کے سوا کوئی معبود نہیں اور محمد ﷺ اللہ کے رسول ہیں، نماز قائم کرے، زکوٰۃ ادا کرے، رمضان کے روزے رکھے، اور اگر استطاعت ہو تو بیت اللہ کا حج کرے۔ ایمان یہ ہے کہ تو اللہ، اس کے فرشتوں، اس کی کتابوں، اس کے رسولوں، آخرت کے دن اور تقدیر کے اچھے اور برے ہونے پر ایمان لائے۔ احسان یہ ہے کہ تو اللہ کی عبادت ایسے کرے گویا تو اسے دیکھ رہا ہے اور اگر تو اسے نہیں دیکھ سکتا تو بے شک وہ تجھے دیکھ رہا ہے۔"
   },
   {
-    "source": "Sahih Bukhari",
-    "text": "None of you will have faith till he wishes for his (Muslim) brother what he likes for himself."
+    "id": 3,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 3",
+    "text": "Islam is built upon five: testifying that there is no god but Allah and Muhammad is the Messenger of Allah, establishing prayer, paying zakat, making pilgrimage to the House, and fasting in Ramadan.",
+    "text_ur": "اسلام کی بنیاد پانچ چیزوں پر رکھی گئی ہے: اس بات کی گواہی دینا کہ اللہ کے سوا کوئی معبود نہیں اور محمد ﷺ اللہ کے رسول ہیں، نماز قائم کرنا، زکوٰۃ ادا کرنا، بیت اللہ کا حج کرنا، اور رمضان کے روزے رکھنا۔"
   },
   {
+    "id": 4,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 4",
+    "text": "Verily the creation of each one of you is brought together in his mother's womb for forty days as a drop, then he becomes a clot for a similar period, then a morsel of flesh for a similar period, then an angel is sent to him who blows the spirit into him and is commanded with four things: to write his provision, his life span, his deeds, and whether he will be wretched or happy.",
+    "text_ur": "تم میں سے ہر ایک کی تخلیق اس کی ماں کے پیٹ میں چالیس دن تک نطفے کی شکل میں جمع ہوتی ہے، پھر اتنے ہی دن علقہ (خون کا لوتھڑا) بنتا ہے، پھر اتنے ہی دن مضغہ (گوشت کا ٹکڑا) بنتا ہے، پھر اللہ فرشتے کو بھیجتا ہے جو اس میں روح پھونکتا ہے اور اسے چار باتیں لکھنے کا حکم دیا جاتا ہے: اس کا رزق، اس کی عمر، اس کے اعمال، اور یہ کہ بدبخت ہوگا یا نیک بخت۔"
+  },
+  {
+    "id": 5,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 5",
+    "text": "Whoever innovates something in this matter of ours (i.e., Islam) that is not part of it, will have it rejected.",
+    "text_ur": "جس نے ہمارے اس دین میں کوئی نئی بات ایجاد کی جو اس میں سے نہیں ہے تو وہ مردود ہے۔"
+  },
+  {
+    "id": 6,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 6",
+    "text": "That which is lawful is clear and that which is unlawful is clear, and between the two are doubtful matters about which many people do not know. Thus whoever avoids the doubtful matters clears himself in regard to his religion and his honor.",
+    "text_ur": "حلال واضح ہے اور حرام بھی واضح ہے اور ان دونوں کے درمیان مشتبہ چیزیں ہیں جن کو بہت سے لوگ نہیں جانتے۔ پس جس نے مشتبہ چیزوں سے بچا اس نے اپنے دین اور اپنی عزت کو محفوظ رکھا۔"
+  },
+  {
+    "id": 7,
     "source": "Sahih Muslim",
-    "text": "He who treads a path in search of knowledge, Allah will make the path to Paradise easy for him."
+    "reference": "Nawawi 40, Hadith 7",
+    "text": "The religion is sincerity (nasihah). We said: To whom? He said: To Allah, His Book, His Messenger, the leaders of the Muslims, and to their common people.",
+    "text_ur": "دین خیرخواہی کا نام ہے۔ ہم نے پوچھا: کس کے لیے؟ آپ ﷺ نے فرمایا: اللہ کے لیے، اس کی کتاب کے لیے، اس کے رسول کے لیے، مسلمانوں کے حکمرانوں کے لیے، اور عام مسلمانوں کے لیے۔"
+  },
+  {
+    "id": 8,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 8",
+    "text": "I have been ordered to fight the people until they testify that there is no god but Allah and that Muhammad is the Messenger of Allah, and establish prayer and pay zakat. If they do this, their blood and property are guaranteed protection from me except by right of Islam, and their accounting will be with Allah.",
+    "text_ur": "مجھے حکم دیا گیا ہے کہ لوگوں سے اس وقت تک لڑوں جب تک وہ گواہی نہ دیں کہ اللہ کے سوا کوئی معبود نہیں اور محمد ﷺ اللہ کے رسول ہیں، نماز قائم کریں اور زکوٰۃ ادا کریں۔ جب وہ ایسا کر لیں تو ان کے خون اور مال حق اسلام کے سوا مجھ سے محفوظ ہیں اور ان کا حساب اللہ کے ذمے ہے۔"
+  },
+  {
+    "id": 9,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 9",
+    "text": "What I have forbidden for you, avoid. What I have ordered you to do, do as much of it as you can. For verily, it was only the excessive questioning and their disagreeing with their prophets that destroyed those who were before you.",
+    "text_ur": "جو میں تمہیں منع کروں اس سے بچو اور جو حکم دوں اسے اپنی طاقت بھر بجا لاؤ۔ بے شک تم سے پہلے لوگ اپنے انبیاء سے زیادہ سوالات اور ان سے اختلاف کرنے کی وجہ سے ہلاک ہوئے۔"
+  },
+  {
+    "id": 10,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 10",
+    "text": "Verily Allah the Exalted is pure and accepts only that which is pure. Allah has commanded the believers with what He commanded the messengers.",
+    "text_ur": "بے شک اللہ تعالیٰ پاک ہے اور صرف پاک چیز ہی قبول فرماتا ہے۔ اللہ نے مومنوں کو وہی حکم دیا ہے جو رسولوں کو دیا ہے۔"
+  },
+  {
+    "id": 11,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 11",
+    "text": "Leave that which makes you doubt for that which does not make you doubt. Verily, truth brings tranquility and falsehood brings doubt.",
+    "text_ur": "جو چیز تمہیں شک میں ڈالے اسے چھوڑ دو اور وہ اختیار کرو جو شک میں نہ ڈالے۔ بے شک سچائی اطمینان لاتی ہے اور جھوٹ شک پیدا کرتا ہے۔"
+  },
+  {
+    "id": 12,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 12",
+    "text": "Part of the perfection of a person's Islam is his leaving that which does not concern him.",
+    "text_ur": "انسان کے اسلام کی خوبی یہ ہے کہ وہ فضول باتوں کو چھوڑ دے۔"
+  },
+  {
+    "id": 13,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 13",
+    "text": "None of you truly believes until he loves for his brother what he loves for himself.",
+    "text_ur": "تم میں سے کوئی اس وقت تک مومن نہیں ہوسکتا جب تک اپنے بھائی کے لیے وہ نہ چاہے جو اپنے لیے چاہتا ہے۔"
+  },
+  {
+    "id": 14,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 14",
+    "text": "The blood of a Muslim may not be legally spilled other than in one of three cases: the married person who commits adultery, a life for a life, and one who forsakes his religion and separates from the community.",
+    "text_ur": "کسی مسلمان کا خون تین صورتوں کے سوا حلال نہیں: شادی شدہ زانی، جان کے بدلے جان، اور وہ جو اپنا دین چھوڑ دے اور جماعت سے الگ ہوجائے۔"
+  },
+  {
+    "id": 15,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 15",
+    "text": "Whoever believes in Allah and the Last Day, let him speak a good word or remain silent. Whoever believes in Allah and the Last Day, let him honor his neighbor. Whoever believes in Allah and the Last Day, let him honor his guest.",
+    "text_ur": "جو شخص اللہ اور آخرت کے دن پر ایمان رکھتا ہے وہ اچھی بات کہے یا خاموش رہے۔ جو اللہ اور آخرت کے دن پر ایمان رکھتا ہے وہ اپنے پڑوسی کا احترام کرے۔ جو اللہ اور آخرت کے دن پر ایمان رکھتا ہے وہ اپنے مہمان کی عزت کرے۔"
+  },
+  {
+    "id": 16,
+    "source": "Sahih al-Bukhari",
+    "reference": "Nawawi 40, Hadith 16",
+    "text": "Do not become angry. (He repeated it several times: Do not become angry.)",
+    "text_ur": "غصہ مت کرو۔ (آپ ﷺ نے کئی بار فرمایا: غصہ مت کرو۔)"
+  },
+  {
+    "id": 17,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 17",
+    "text": "Verily Allah has prescribed proficiency in all things. So when you kill, kill in a good way; when you slaughter, slaughter in a good way. Let each of you sharpen his blade and spare suffering to the animal he slaughters.",
+    "text_ur": "بے شک اللہ تعالیٰ نے ہر چیز میں احسان (خوبی) لازم کیا ہے۔ پس جب تم قتل کرو تو اچھے طریقے سے قتل کرو اور جب ذبح کرو تو اچھے طریقے سے ذبح کرو۔ ہر ایک اپنی چھری تیز کر لے اور ذبح کیے جانے والے جانور کو آرام دے۔"
+  },
+  {
+    "id": 18,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 18",
+    "text": "Have taqwa of Allah wherever you are, follow up a bad deed with a good deed and it will wipe it out, and behave well towards people.",
+    "text_ur": "جہاں بھی ہو اللہ سے ڈرتے رہو، برائی کے بعد نیکی کرو، وہ اسے مٹا دے گی، اور لوگوں سے اچھے اخلاق سے پیش آؤ۔"
+  },
+  {
+    "id": 19,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 19",
+    "text": "Be mindful of Allah, and Allah will protect you. Be mindful of Allah, and you will find Him before you. If you ask, ask from Allah. If you seek help, seek help from Allah. Know that if the whole nation were to gather together to benefit you with something, they would only benefit you with something that Allah had already prescribed for you.",
+    "text_ur": "اللہ کی حفاظت کرو، اللہ تمہاری حفاظت کرے گا۔ اللہ کی حفاظت کرو، تم اسے اپنے سامنے پاؤ گے۔ جب مانگو تو اللہ سے مانگو۔ جب مدد چاہو تو اللہ سے مدد چاہو۔ جان لو کہ اگر ساری امت جمع ہوجائے کہ تمہیں فائدہ پہنچائے تو وہ تمہیں صرف وہی فائدہ پہنچا سکتے ہیں جو اللہ نے تمہارے لیے لکھ دیا ہے۔"
+  },
+  {
+    "id": 20,
+    "source": "Sahih al-Bukhari",
+    "reference": "Nawawi 40, Hadith 20",
+    "text": "If you feel no shame, then do as you wish.",
+    "text_ur": "جب تمہیں حیا نہ رہے تو جو چاہو کرو۔"
+  },
+  {
+    "id": 21,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 21",
+    "text": "Say: I believe in Allah, and then be steadfast.",
+    "text_ur": "کہو: میں اللہ پر ایمان لایا، پھر اس پر ثابت قدم رہو۔"
+  },
+  {
+    "id": 22,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 22",
+    "text": "Do you see that if I pray the five prescribed prayers, fast Ramadan, treat as lawful what is lawful and treat as forbidden what is forbidden, and do nothing further, shall I enter Paradise? He said: Yes.",
+    "text_ur": "آپ بتائیے کہ اگر میں پانچ فرض نمازیں پڑھوں، رمضان کے روزے رکھوں، حلال کو حلال اور حرام کو حرام سمجھوں اور اس سے زیادہ کچھ نہ کروں تو کیا میں جنت میں داخل ہوجاؤں گا؟ آپ ﷺ نے فرمایا: ہاں۔"
+  },
+  {
+    "id": 23,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 23",
+    "text": "Purification is half of faith. Saying 'Al-hamdu lillah' fills the scale. Saying 'Subhan Allah' and 'Al-hamdu lillah' fill what is between the heavens and the earth. Prayer is a light. Charity is proof. Patience is illumination. And the Quran is an argument for you or against you.",
+    "text_ur": "طہارت نصف ایمان ہے۔ الحمدللہ کہنا میزان کو بھر دیتا ہے۔ سبحان اللہ اور الحمدللہ آسمانوں اور زمین کے درمیان جو کچھ ہے اسے بھر دیتے ہیں۔ نماز نور ہے۔ صدقہ دلیل ہے۔ صبر روشنی ہے۔ اور قرآن تمہارے حق میں یا تمہارے خلاف حجت ہے۔"
+  },
+  {
+    "id": 24,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 24",
+    "text": "O My servants, I have forbidden oppression for Myself and have made it forbidden amongst you, so do not oppress one another.",
+    "text_ur": "اے میرے بندو! میں نے ظلم کو اپنے اوپر حرام کر لیا ہے اور تمہارے درمیان بھی اسے حرام کر دیا ہے، پس ایک دوسرے پر ظلم مت کرو۔"
+  },
+  {
+    "id": 25,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 25",
+    "text": "Every joint of a person must perform a charity each day that the sun rises: to administer justice between two people is a charity; to help a man with his mount, lifting him onto it or hoisting his belongings onto it, is a charity; a good word is a charity; each step that you take towards the prayer is a charity; and removing a harmful thing from the road is a charity.",
+    "text_ur": "انسان کے ہر جوڑ پر ہر دن صدقہ واجب ہے: دو آدمیوں کے درمیان انصاف کرنا صدقہ ہے، کسی آدمی کو اس کی سواری پر بیٹھنے میں مدد کرنا صدقہ ہے، اچھی بات بولنا صدقہ ہے، نماز کی طرف جانے والا ہر قدم صدقہ ہے، اور راستے سے تکلیف دہ چیز ہٹانا صدقہ ہے۔"
+  },
+  {
+    "id": 26,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 26",
+    "text": "Every act of goodness is a charity.",
+    "text_ur": "ہر نیکی صدقہ ہے۔"
+  },
+  {
+    "id": 27,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 27",
+    "text": "Righteousness is good character, and sin is that which wavers in your heart and which you dislike people finding out about.",
+    "text_ur": "نیکی حسن اخلاق ہے اور گناہ وہ ہے جو تمہارے دل میں کھٹکے اور تم یہ ناپسند کرو کہ لوگوں کو اس کا علم ہو۔"
+  },
+  {
+    "id": 28,
+    "source": "Sunan Ibn Majah, Ahmad",
+    "reference": "Nawawi 40, Hadith 28",
+    "text": "I counsel you to fear Allah, to listen and obey, even if a slave becomes your leader. Verily he among you who lives long will see great controversy, so you must keep to my Sunnah and to the Sunnah of the rightly-guided caliphs. Cling to it firmly. Beware of newly invented matters, for every new matter is an innovation and every innovation is going astray.",
+    "text_ur": "میں تمہیں اللہ سے ڈرنے، سننے اور اطاعت کرنے کی نصیحت کرتا ہوں خواہ کوئی غلام تمہارا امیر بن جائے۔ تم میں سے جو زندہ رہے گا وہ بہت اختلاف دیکھے گا، پس تم میری سنت اور خلفائے راشدین کی سنت کو لازم پکڑو اور اسے مضبوطی سے تھام لو۔ نئی ایجاد شدہ باتوں سے بچو کیونکہ ہر نئی بات بدعت ہے اور ہر بدعت گمراہی ہے۔"
+  },
+  {
+    "id": 29,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 29",
+    "text": "Shall I not inform you of something more important than fasting, prayer and charity? It is reconciling between people, for verily corrupting relations between people is the shaver (destroyer).",
+    "text_ur": "کیا میں تمہیں روزے، نماز اور صدقے سے بڑھ کر چیز نہ بتاؤں؟ وہ آپس میں صلح کرانا ہے کیونکہ آپس کے تعلقات بگاڑنا مونڈ ڈالنے والی (تباہ کرنے والی) چیز ہے۔"
+  },
+  {
+    "id": 30,
+    "source": "Al-Daraqutni, Al-Bayhaqi",
+    "reference": "Nawawi 40, Hadith 30",
+    "text": "Allah the Almighty has laid down religious duties, so do not neglect them. He has set boundaries, so do not overstep them. He has prohibited some things, so do not violate them; about some things He was silent, out of compassion for you, not forgetfulness, so do not seek after them.",
+    "text_ur": "اللہ تعالیٰ نے فرائض مقرر کیے ہیں، انہیں ضائع نہ کرو۔ حدود مقرر کیں، ان سے تجاوز نہ کرو۔ بعض چیزیں حرام کیں، ان کی خلاف ورزی نہ کرو۔ اور بعض چیزوں کے بارے میں خاموشی اختیار کی، تم پر رحم کی وجہ سے، نہ کہ بھول کر، تو ان کے بارے میں تفتیش نہ کرو۔"
+  },
+  {
+    "id": 31,
+    "source": "Sunan al-Tirmidhi, Sunan Ibn Majah",
+    "reference": "Nawawi 40, Hadith 31",
+    "text": "Be in the world as though you were a stranger or a traveler.",
+    "text_ur": "دنیا میں ایسے رہو جیسے مسافر یا راہ گیر ہو۔"
+  },
+  {
+    "id": 32,
+    "source": "Sunan Ibn Majah, Ahmad",
+    "reference": "Nawawi 40, Hadith 32",
+    "text": "There should be neither harming nor reciprocating harm.",
+    "text_ur": "نقصان پہنچانا جائز ہے نہ نقصان کا بدلہ لینا۔"
+  },
+  {
+    "id": 33,
+    "source": "Al-Bayhaqi",
+    "reference": "Nawawi 40, Hadith 33",
+    "text": "Were people to be given everything that they claimed, men would claim the wealth and lives of others. But the burden of proof is on the claimant, and the taking of an oath is upon him who denies.",
+    "text_ur": "اگر لوگوں کو ان کے دعوؤں پر دے دیا جائے تو لوگ ایک دوسرے کے مال اور جانوں کا دعویٰ کرنے لگیں۔ لیکن گواہی مدعی پر ہے اور قسم اس پر ہے جو انکار کرے۔"
+  },
+  {
+    "id": 34,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 34",
+    "text": "Whosoever of you sees an evil, let him change it with his hand; and if he is not able to do so, then with his tongue; and if he is not able to do so, then with his heart — and that is the weakest of faith.",
+    "text_ur": "تم میں سے جو کوئی برائی دیکھے تو اسے اپنے ہاتھ سے بدل دے، اگر اس کی طاقت نہ ہو تو اپنی زبان سے، اور اگر اس کی بھی طاقت نہ ہو تو اپنے دل سے (برا جانے) اور یہ ایمان کا سب سے کمزور درجہ ہے۔"
+  },
+  {
+    "id": 35,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 35",
+    "text": "Do not envy one another; do not inflate prices for one another; do not hate one another; do not turn away from one another; do not undercut one another in trade. Be, O servants of Allah, brothers. A Muslim is the brother of a Muslim: he does not oppress him, nor does he fail him, nor does he lie to him, nor does he hold him in contempt.",
+    "text_ur": "ایک دوسرے سے حسد نہ کرو، قیمتیں بڑھا کر دھوکہ نہ دو، آپس میں بغض نہ رکھو، ایک دوسرے سے منہ نہ موڑو، تجارت میں ایک دوسرے کو نقصان نہ پہنچاؤ۔ اللہ کے بندو! بھائی بھائی بن جاؤ۔ مسلمان مسلمان کا بھائی ہے: نہ اس پر ظلم کرتا ہے، نہ اسے بے یارومددگار چھوڑتا ہے، نہ اس سے جھوٹ بولتا ہے، اور نہ اسے حقیر سمجھتا ہے۔"
+  },
+  {
+    "id": 36,
+    "source": "Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 36",
+    "text": "Whoever relieves a believer's distress of the distressful aspects of this world, Allah will rescue him from a difficulty of the difficulties of the Hereafter.",
+    "text_ur": "جو کسی مومن کی دنیاوی مشکل دور کرے، اللہ آخرت کی مشکلات میں سے اس کی ایک مشکل دور فرمائے گا۔"
+  },
+  {
+    "id": 37,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 37",
+    "text": "Allah has written down the good deeds and the bad deeds, then explained that. Whoever intends to perform a good deed but does not do it, Allah writes it as one complete good deed. If he intends to perform it and does perform it, Allah writes it down as ten good deeds up to seven hundred times or many more.",
+    "text_ur": "اللہ نے نیکیاں اور برائیاں لکھ دی ہیں پھر ان کی وضاحت فرمائی۔ جس نے نیکی کا ارادہ کیا لیکن عمل نہیں کیا تو اللہ اسے ایک مکمل نیکی لکھتا ہے۔ اگر اس نے ارادہ کیا اور عمل بھی کیا تو اللہ اسے دس سے سات سو گنا تک یا اس سے بھی زیادہ لکھتا ہے۔"
+  },
+  {
+    "id": 38,
+    "source": "Sahih al-Bukhari",
+    "reference": "Nawawi 40, Hadith 38",
+    "text": "Whosoever shows enmity to a friend of Mine, I shall be at war with him. My servant does not draw near to Me with anything more loved by Me than the religious obligations I have imposed upon him. And My servant continues to draw near to Me with voluntary works so that I shall love him.",
+    "text_ur": "جس نے میرے کسی ولی سے دشمنی رکھی، میں نے اس سے اعلان جنگ کر دیا۔ میرا بندہ فرائض سے زیادہ کسی چیز سے میرا قرب حاصل نہیں کرتا۔ اور میرا بندہ نوافل سے مسلسل میرا قرب حاصل کرتا رہتا ہے یہاں تک کہ میں اس سے محبت کرنے لگتا ہوں۔"
+  },
+  {
+    "id": 39,
+    "source": "Sunan Ibn Majah",
+    "reference": "Nawawi 40, Hadith 39",
+    "text": "Verily Allah has pardoned for me my Ummah their mistakes, their forgetfulness, and that which they have been forced to do under duress.",
+    "text_ur": "بے شک اللہ نے میری امت سے غلطی، بھول اور جبراً کرائے گئے عمل کو معاف کر دیا ہے۔"
+  },
+  {
+    "id": 40,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 40",
+    "text": "Be in this world as though you were a stranger or a wayfarer, and count yourself among the inhabitants of the graves.",
+    "text_ur": "دنیا میں ایسے رہو جیسے اجنبی یا مسافر ہو اور اپنے آپ کو اہل قبور میں شمار کرو۔"
+  },
+  {
+    "id": 41,
+    "source": "Sahih al-Bukhari, Sahih Muslim",
+    "reference": "Nawawi 40, Hadith 41",
+    "text": "None of you truly believes until his desires are in accordance with what I have brought.",
+    "text_ur": "تم میں سے کوئی اس وقت تک مومن نہیں ہوسکتا جب تک اس کی خواہشات میری لائی ہوئی تعلیمات کے تابع نہ ہوجائیں۔"
+  },
+  {
+    "id": 42,
+    "source": "Sunan al-Tirmidhi",
+    "reference": "Nawawi 40, Hadith 42",
+    "text": "O son of Adam, so long as you call upon Me and ask of Me, I shall forgive you for what you have done, and I shall not mind. O son of Adam, were your sins to reach the clouds of the sky and were you then to ask forgiveness of Me, I would forgive you.",
+    "text_ur": "اے ابن آدم! جب تک تو مجھ سے دعا کرتا رہے اور مجھ سے امید رکھے، میں تیرے گناہ معاف کرتا رہوں گا اور مجھے کوئی پروا نہیں۔ اے ابن آدم! اگر تیرے گناہ آسمان کے بادلوں تک پہنچ جائیں پھر تو مجھ سے معافی مانگے تو میں تجھے معاف کر دوں گا۔"
   }
 ]

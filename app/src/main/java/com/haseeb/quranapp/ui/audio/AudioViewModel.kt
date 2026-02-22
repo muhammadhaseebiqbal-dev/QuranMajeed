@@ -1,6 +1,7 @@
 package com.haseeb.quranapp.ui.audio
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
@@ -26,6 +27,7 @@ class AudioViewModel @Inject constructor(
     private val api: com.haseeb.quranapp.data.remote.api.QuranApiService,
     private val userPrefs: UserPreferences,
     private val repository: QuranRepository,
+    private val downloadManager: com.haseeb.quranapp.data.download.SurahDownloadManager,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -132,7 +134,93 @@ class AudioViewModel @Inject constructor(
     fun playSurah(surahId: Int, startAyahIndex: Int = 0, autoPlay: Boolean = true) {
         viewModelScope.launch {
             _currentSurahId.value = surahId
-            
+
+            // Maps TranslationIDs to Audio language codes
+            val langCode = when (userPrefs.translationId) {
+                54, 97 -> "ur.khan"
+                20, 85, 131 -> "en.walk"
+                else -> "en.walk"
+            }
+
+            val surahAyahCounts = intArrayOf(
+                7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128, 111, 110, 98, 135,
+                112, 78, 118, 64, 77, 227, 93, 88, 69, 60, 34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53,
+                89, 59, 37, 35, 38, 29, 18, 45, 60, 49, 62, 55, 78, 96, 29, 22, 24, 13, 14, 11, 11, 18, 12,
+                12, 30, 52, 52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29, 19, 36, 25, 22, 17, 19, 26,
+                30, 20, 15, 21, 11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
+            )
+            val ayahCount = surahAyahCounts.getOrElse(surahId - 1) { 7 }
+
+            // ── OFFLINE-FIRST: Check if surah is downloaded locally ──
+            if (downloadManager.isSurahDownloaded(surahId)) {
+                val mediaItems = mutableListOf<MediaItem>()
+                
+                for (i in 0 until ayahCount) {
+                    val globalAyahId = getGlobalAyahId(surahId, i)
+
+                    val metadata = MediaMetadata.Builder()
+                        .setExtras(Bundle().apply {
+                            putInt("surahId", surahId)
+                            putInt("ayahIndex", i)
+                        })
+                        .setTitle("Surah $surahId - Ayah ${i + 1}")
+                        .setArtist("Quran Majeed")
+                        .build()
+
+                    val cachedFile = downloadManager.getCachedArabicAudio(globalAyahId)
+                    if (cachedFile != null) {
+                        mediaItems.add(
+                            MediaItem.Builder()
+                                .setUri(android.net.Uri.fromFile(cachedFile))
+                                .setMediaMetadata(metadata)
+                                .build()
+                        )
+                    }
+
+                    // Add translation audio if enabled
+                    if (_playWithTranslation.value) {
+                        val tMetadata = MediaMetadata.Builder()
+                            .setExtras(Bundle().apply {
+                                putInt("surahId", surahId)
+                                putInt("ayahIndex", i)
+                            })
+                            .setTitle("Ayah ${i + 1} Translation")
+                            .build()
+
+                        val cachedTrans = downloadManager.getCachedTranslationAudio(langCode, globalAyahId)
+                        if (cachedTrans != null) {
+                            mediaItems.add(
+                                MediaItem.Builder()
+                                    .setUri(android.net.Uri.fromFile(cachedTrans))
+                                    .setMediaMetadata(tMetadata)
+                                    .build()
+                            )
+                        }
+                    }
+                }
+
+                if (mediaItems.isNotEmpty()) {
+                    if (startAyahIndex > 0) {
+                        val targetIndex = if (_playWithTranslation.value) startAyahIndex * 2 else startAyahIndex
+                        if (targetIndex < mediaItems.size) {
+                            player.setMediaItems(mediaItems, targetIndex, 0L)
+                        } else {
+                            player.setMediaItems(mediaItems)
+                        }
+                    } else {
+                        player.setMediaItems(mediaItems)
+                    }
+                    player.prepare()
+                    if (autoPlay) {
+                        val serviceIntent = Intent(context, com.haseeb.quranapp.service.AudioService::class.java)
+                        context.startService(serviceIntent)
+                        player.play()
+                    }
+                    return@launch  // Successfully loaded from cache
+                }
+            }
+
+            // ── ONLINE: Fetch from API if not cached ──
             try {
                 val reciterId = userPrefs.reciterId
                 val response = api.getRecitationByChapter(reciterId, surahId)
@@ -140,14 +228,6 @@ class AudioViewModel @Inject constructor(
 
                 if (audioFiles.isNotEmpty()) {
                     val mediaItems = mutableListOf<MediaItem>()
-                    
-                    // Maps standard TransIDs to API Audio language codes. 
-                    // Note: TR and ID audio do not exist on the free CDN currently, defaulting to EN.
-                    val langCode = when (userPrefs.translationId) {
-                        54, 97 -> "ur.khan"
-                        20, 85, 131 -> "en.walk"
-                        else -> "en.walk"
-                    }
 
                     for (i in audioFiles.indices) {
                         val file = audioFiles[i]
@@ -158,7 +238,8 @@ class AudioViewModel @Inject constructor(
                                 putInt("surahId", surahId)
                                 putInt("ayahIndex", i) 
                             })
-                            .setTitle("Ayah ${i + 1}")
+                            .setTitle("Surah $surahId - Ayah ${i + 1}")
+                            .setArtist("Quran Majeed")
                             .build()
                             
                         val fullUrl = if (file.url.startsWith("http")) file.url
@@ -206,6 +287,8 @@ class AudioViewModel @Inject constructor(
 
                     player.prepare()
                     if (autoPlay) {
+                        val serviceIntent = Intent(context, com.haseeb.quranapp.service.AudioService::class.java)
+                        context.startService(serviceIntent)
                         player.play()
                     }
                 } else {
@@ -234,6 +317,9 @@ class AudioViewModel @Inject constructor(
             
          player.setMediaItem(mediaItem)
          player.prepare()
+         // Start the AudioService so MediaSession + notification are created
+         val serviceIntent = Intent(context, com.haseeb.quranapp.service.AudioService::class.java)
+         context.startService(serviceIntent)
          player.play()
     }
 

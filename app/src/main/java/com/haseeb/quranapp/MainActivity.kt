@@ -55,9 +55,9 @@ class MainActivity : ComponentActivity() {
             dailyWorkRequest
         )
         
-        // Start AudioService to ensure it's ready
-        val intent = Intent(this, com.haseeb.quranapp.service.AudioService::class.java)
-        startForegroundService(intent) // Or startService depending on API level
+        // AudioService is a MediaSessionService — Media3 manages its
+        // lifecycle and foreground state automatically when playback begins.
+        // Do NOT manually start it as a foreground service.
 
         setContent {
             QuranAppTheme {

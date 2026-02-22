@@ -26,9 +26,11 @@ class DailyHadithWidget : AppWidgetProvider() {
         val hadith = getRandomHadith(context)
         if (hadith != null) {
             views.setTextViewText(R.id.widget_text, "\"${hadith.second}\"")
+            views.setTextViewText(R.id.widget_text_ur, "\"${hadith.third}\"")
             views.setTextViewText(R.id.widget_source, "- ${hadith.first}")
         } else {
             views.setTextViewText(R.id.widget_text, "Could not load hadith.")
+            views.setTextViewText(R.id.widget_text_ur, "")
             views.setTextViewText(R.id.widget_source, "")
         }
         
@@ -45,7 +47,7 @@ class DailyHadithWidget : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
 
-    private fun getRandomHadith(context: Context): Pair<String, String>? {
+    private fun getRandomHadith(context: Context): Triple<String, String, String>? {
         return try {
             val inputStream: InputStream = context.assets.open("hadiths.json")
             val size = inputStream.available()
@@ -61,7 +63,8 @@ class DailyHadithWidget : AppWidgetProvider() {
                 val jsonObject = jsonArray.getJSONObject(randomIndex)
                 val source = jsonObject.getString("source")
                 val text = jsonObject.getString("text")
-                Pair(source, text)
+                val textUr = jsonObject.optString("text_ur", "")
+                Triple(source, text, textUr)
             } else {
                 null
             }

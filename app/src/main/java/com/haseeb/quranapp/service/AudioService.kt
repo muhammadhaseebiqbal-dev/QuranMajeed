@@ -1,8 +1,6 @@
 package com.haseeb.quranapp.service
 
 import android.content.Intent
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaSession
 import androidx.media3.session.MediaSessionService
@@ -20,32 +18,25 @@ class AudioService : MediaSessionService() {
     override fun onCreate() {
         super.onCreate()
         mediaSession = MediaSession.Builder(this, player).build()
-        
-        // Create notification channel
-        val channelId = "audio_channel"
-        val channelName = "Quran Audio"
-        val importance = android.app.NotificationManager.IMPORTANCE_LOW
-        val channel = android.app.NotificationChannel(channelId, channelName, importance)
-        val notificationManager = getSystemService(android.app.NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
-
-        // Create notification
-        val notification = android.app.Notification.Builder(this, channelId)
-            .setContentTitle("Quran App")
-            .setContentText("Audio Service Running")
-            .setSmallIcon(android.R.drawable.ic_media_play)
-            .build()
-
-        startForeground(1, notification)
+        // Media3 automatically creates a rich media notification with
+        // play/pause, skip from the MediaSession. No manual notification needed!
     }
 
     override fun onGetSession(controllerInfo: MediaSession.ControllerInfo): MediaSession? {
         return mediaSession
     }
 
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        val player = mediaSession?.player
+        if (player == null || !player.playWhenReady || player.mediaItemCount == 0) {
+            stopSelf()
+        }
+    }
+
     override fun onDestroy() {
         mediaSession?.run {
-            player.release()
+            // Do NOT release the player here — it's a shared singleton managed by Hilt.
+            // Only release the MediaSession.
             release()
             mediaSession = null
         }

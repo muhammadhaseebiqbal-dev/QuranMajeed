@@ -23,13 +23,31 @@ class ReaderViewModel @Inject constructor(
     private val _ayahs = MutableStateFlow<List<AyahEntity>>(emptyList())
     val ayahs: StateFlow<List<AyahEntity>> = _ayahs.asStateFlow()
 
+    private var currentSurahId: Int? = null
+    private var currentJuzId: Int? = null
+
+    // Listen for translation changes and re-sync immediately
+    private val prefListener = android.content.SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "translation_id") {
+            viewModelScope.launch {
+                // Sync new translation into Room DB
+                repository.syncQuranData()
+                // Room Flow will auto-emit updated ayahs
+            }
+        }
+    }
+
     init {
+        userPrefs.registerListener(prefListener)
+
         val surahId = savedStateHandle.get<Int>("surahId")
         if (surahId != null && surahId != -1) {
+            currentSurahId = surahId
             fetchVerses(surahId)
         } else {
             val juzId = savedStateHandle.get<Int>("juzId")
             if (juzId != null && juzId != -1) {
+                currentJuzId = juzId
                 fetchVersesByJuz(juzId)
             }
         }
@@ -92,5 +110,10 @@ class ReaderViewModel @Inject constructor(
             _bookmarkedSurahId.value = surahId
             _bookmarkedAyahNum.value = ayahNum
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        userPrefs.unregisterListener(prefListener)
     }
 }

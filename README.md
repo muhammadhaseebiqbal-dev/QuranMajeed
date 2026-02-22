@@ -75,7 +75,6 @@ If you don't use F-Droid, you can grab the raw `app-release.apk` directly from o
 
 ## 🛠️ Building from Source
 
-This app uses modern Android development practices (Kotlin, Jetpack Compose, Hilt, Room, Media3).
 
 1. Clone the repository:
    ```bash

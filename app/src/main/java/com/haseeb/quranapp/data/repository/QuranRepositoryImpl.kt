@@ -13,7 +13,8 @@ import javax.inject.Inject
 class QuranRepositoryImpl @Inject constructor(
     private val api: QuranApiService,
     private val dao: QuranDao,
-    private val userPrefs: com.haseeb.quranapp.data.local.prefs.UserPreferences
+    private val userPrefs: com.haseeb.quranapp.data.local.prefs.UserPreferences,
+    private val downloadManager: com.haseeb.quranapp.data.download.SurahDownloadManager
 ) : QuranRepository {
 
     override fun getAllSurahs(): Flow<List<SurahEntity>> {
@@ -34,8 +35,15 @@ class QuranRepositoryImpl @Inject constructor(
 
     override suspend fun getTafsir(verseKey: String): Result<String> {
         return try {
-            // Use user-configured Tafsir ID
-            val resourceId = userPrefs.tafsirId 
+            val resourceId = userPrefs.tafsirId
+            
+            // Check local cache first
+            val cached = downloadManager.getCachedTafseer(resourceId, verseKey)
+            if (cached != null) {
+                return Result.success(cached)
+            }
+            
+            // Fallback to API
             val response = api.getTafsir(resourceId, verseKey)
             val text = response.tafsir?.text
             if (text != null) Result.success(text) else Result.failure(Exception("No tafsir found"))
@@ -106,38 +114,56 @@ class QuranRepositoryImpl @Inject constructor(
             
             // Force check if translation is missing, length is 0, or user changed translation preference
             if (firstAyah?.textTranslation.isNullOrEmpty() || userPrefs.lastSyncedTranslationId != userPrefs.translationId) {
-                Log.d("QuranRepo", "Syncing Translation... ID: ${userPrefs.translationId}")
-                try {
-                    val translationResponse = api.getTranslation(userPrefs.translationId)
-                    val translationsList = translationResponse.translations ?: emptyList()
-
-                    if (translationsList.isNotEmpty()) {
-                        val allAyahs = dao.getAllAyahs()
-                        
-                        // Assuming the API returns 6236 translations exactly in sequence
-                        if (allAyahs.size == translationsList.size) {
-                            val updatedAyahs = allAyahs.zip(translationsList).mapNotNull { (ayah, translationDto) ->
-                                val newTrans = translationDto.text
-                                // Only update if different or missing
-                                if (newTrans != ayah.textTranslation) {
-                                    ayah.copy(textTranslation = newTrans)
-                                } else {
-                                    null
-                                }
-                            }
-                            
-                            if (updatedAyahs.isNotEmpty()) {
-                                // Split into chunks to avoid SQLite limits if necessary
-                                Log.d("QuranRepo", "Updating ${updatedAyahs.size} translations...")
-                                dao.updateAyahs(updatedAyahs)
-                                
-                                // Save that we've successfully synced this ID
-                                userPrefs.lastSyncedTranslationId = userPrefs.translationId
-                            }
+                val translationId = userPrefs.translationId
+                Log.d("QuranRepo", "Syncing Translation... ID: $translationId")
+                
+                // ── CACHE-FIRST: Try local cached translations for instant switching ──
+                val testCached = downloadManager.getCachedTranslation(translationId, "1:1")
+                if (testCached != null) {
+                    // Cached files exist — load instantly from disk
+                    Log.d("QuranRepo", "Loading translation $translationId from local cache (instant)")
+                    val allAyahs = dao.getAllAyahs()
+                    val updatedAyahs = allAyahs.mapNotNull { ayah ->
+                        val verseKey = "${ayah.surahId}:${ayah.ayahNumber}"
+                        val cached = downloadManager.getCachedTranslation(translationId, verseKey)
+                        if (cached != null && cached != ayah.textTranslation) {
+                            ayah.copy(textTranslation = cached)
+                        } else {
+                            null
                         }
                     }
-                } catch (e: Exception) {
-                    Log.e("QuranRepo", "Translation sync failed", e)
+                    if (updatedAyahs.isNotEmpty()) {
+                        Log.d("QuranRepo", "Instant-loaded ${updatedAyahs.size} cached translations")
+                        dao.updateAyahs(updatedAyahs)
+                        userPrefs.lastSyncedTranslationId = translationId
+                    }
+                } else {
+                    // ── FALLBACK: No cache, fetch from API ──
+                    try {
+                        val translationResponse = api.getTranslation(translationId)
+                        val translationsList = translationResponse.translations ?: emptyList()
+
+                        if (translationsList.isNotEmpty()) {
+                            val allAyahs = dao.getAllAyahs()
+                            if (allAyahs.size == translationsList.size) {
+                                val updatedAyahs = allAyahs.zip(translationsList).mapNotNull { (ayah, translationDto) ->
+                                    val newTrans = translationDto.text
+                                    if (newTrans != ayah.textTranslation) {
+                                        ayah.copy(textTranslation = newTrans)
+                                    } else {
+                                        null
+                                    }
+                                }
+                                if (updatedAyahs.isNotEmpty()) {
+                                    Log.d("QuranRepo", "Updating ${updatedAyahs.size} translations from API...")
+                                    dao.updateAyahs(updatedAyahs)
+                                    userPrefs.lastSyncedTranslationId = translationId
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("QuranRepo", "Translation sync failed (no cache, no network)", e)
+                    }
                 }
             }
             
