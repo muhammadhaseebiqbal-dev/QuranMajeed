@@ -1,7 +1,11 @@
 # Quran Majeed (قرآن مجید)
 
 <div align="center">
+<<<<<<< HEAD
   <img src="fastlane/metadata/android/en-US/images/icon.png" alt="Quran Majeed Logo" width="256" />
+=======
+  <img src="app/src/main/assets/QuranMajeed_logo.png" alt="Quran Majeed Logo" width="256" />
+>>>>>>> 5e610d511ef0960031ff6f1fe2b20abd38ae0536
   
   <br/>
   
@@ -49,20 +53,29 @@
 
 Because **Quran Majeed** respects user privacy and avoids tracking, it is designed perfectly for open-source stores.
 
+<<<<<<< HEAD
 ### 3. F-Droid (Main)
+=======
+### 1. F-Droid (Main)
+>>>>>>> 5e610d511ef0960031ff6f1fe2b20abd38ae0536
 *Submission is currently pending in the main F-Droid repository.*
 
 <a href="#">
   <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">
 </a>
 
+<<<<<<< HEAD
 ### 1. IzzyOnDroid
+=======
+### 2. IzzyOnDroid
+>>>>>>> 5e610d511ef0960031ff6f1fe2b20abd38ae0536
 You can download the latest official release directly from IzzyOnDroid.
 *(Link will be available here once approved by the Izzy repo)*
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.haseeb.quranapp">
   <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="60">
 </a>
+<<<<<<< HEAD
 
 ### 2. GitHub Releases (Direct APK)
 If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our Releases Page.
@@ -70,6 +83,17 @@ If you don't use F-Droid, you can grab the raw `app-release.apk` directly from o
 <a href="https://github.com/muhammadhaseebiqbal-dev/QuranMajeed/releases/latest">
   <img src="https://img.shields.io/badge/Download-GitHub_Releases-181717?style=for-the-badge&logo=github&logoColor=white" alt="Download from GitHub" height="40">
 </a>
+=======
+
+### 3. GitHub Releases (Direct APK)
+If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our Releases Page.
+
+<a href="https://github.com/muhammadhaseebiqbal-dev/QuranMajeed/releases/latest">
+  <img src="https://img.shields.io/badge/Download-GitHub_Releases-181717?style=for-the-badge&logo=github&logoColor=white" alt="Download from GitHub" height="40">
+</a>
+
+
+>>>>>>> 5e610d511ef0960031ff6f1fe2b20abd38ae0536
 
 ---
 

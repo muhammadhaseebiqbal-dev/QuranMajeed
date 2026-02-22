@@ -1,0 +1,21 @@
+{
+  "audio_7": {
+    "api_status": 200,
+    "url": "Alafasy/mp3/001001.mp3",
+    "test1_status": 404,
+    "test2_status": 200
+  },
+  "audio_2": {
+    "api_status": 200,
+    "url": "AbdulBaset/Murattal/mp3/001001.mp3",
+    "test1_status": 404,
+    "test2_status": 200
+  },
+  "translation_131": {
+    "api_status": 200,
+    "num_verses": 0
+  },
+  "tafsir_169": {
+    "api_status": 200
+  }
+}
