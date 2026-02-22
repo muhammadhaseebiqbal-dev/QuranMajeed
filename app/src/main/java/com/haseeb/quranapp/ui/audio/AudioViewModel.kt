@@ -1,6 +1,7 @@
 package com.haseeb.quranapp.ui.audio
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -45,7 +46,23 @@ class AudioViewModel @Inject constructor(
     private val _currentPosition = MutableStateFlow(0L)
     val currentPosition: StateFlow<Long> = _currentPosition.asStateFlow()
 
+    private var _isSeeking = false
+
+    private val prefListener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+        if (key == "translation_id" || key == "reciter_id") {
+            val activeSurahId = _currentSurahId.value
+            if (activeSurahId != null) {
+                // Reload on setting change whether playing or paused
+                val safeAyahIndex = if (_currentAyahIndex.value >= 0) _currentAyahIndex.value else 0
+                val wasPlaying = _isPlaying.value
+                playSurah(activeSurahId, safeAyahIndex, wasPlaying)
+            }
+        }
+    }
+
     init {
+        userPrefs.registerListener(prefListener)
+        
         player.addListener(object : Player.Listener {
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 _isPlaying.value = isPlaying
@@ -73,13 +90,14 @@ class AudioViewModel @Inject constructor(
             }
         })
         
-        // Polling for progress (Very fast for fluid seekbar)
+        // Polling for progress
         viewModelScope.launch {
             while (true) {
-                if (_isPlaying.value) {
+                if (_isPlaying.value && !_isSeeking) {
                     _currentPosition.value = player.currentPosition
+                    _duration.value = player.duration.coerceAtLeast(0L)
                 }
-                kotlinx.coroutines.delay(50)
+                kotlinx.coroutines.delay(100)
             }
         }
         
@@ -106,29 +124,34 @@ class AudioViewModel @Inject constructor(
         val activeSurahId = _currentSurahId.value
         if (activeSurahId != null) {
             val safeAyahIndex = if (_currentAyahIndex.value >= 0) _currentAyahIndex.value else 0
-            playSurah(activeSurahId, safeAyahIndex)
+            val wasPlaying = _isPlaying.value
+            playSurah(activeSurahId, safeAyahIndex, wasPlaying)
         }
     }
 
-    fun playSurah(surahId: Int, startAyahIndex: Int = 0) {
+    fun playSurah(surahId: Int, startAyahIndex: Int = 0, autoPlay: Boolean = true) {
         viewModelScope.launch {
             _currentSurahId.value = surahId
             
             try {
-                // Fetch Ayah entities to get the Global IDs required for Translation Audio
-                val surahAyahs = repository.getAyahsBySurah(surahId).firstOrNull() ?: emptyList()
-
                 val reciterId = userPrefs.reciterId
                 val response = api.getRecitationByChapter(reciterId, surahId)
                 val audioFiles = response.audio_files
 
                 if (audioFiles.isNotEmpty()) {
                     val mediaItems = mutableListOf<MediaItem>()
-                    val langCode = if (userPrefs.translationId in listOf(54, 97, 831, 158)) "ur.khan" else "en.walk"
+                    
+                    // Maps standard TransIDs to API Audio language codes. 
+                    // Note: TR and ID audio do not exist on the free CDN currently, defaulting to EN.
+                    val langCode = when (userPrefs.translationId) {
+                        54, 97 -> "ur.khan"
+                        20, 85, 131 -> "en.walk"
+                        else -> "en.walk"
+                    }
 
                     for (i in audioFiles.indices) {
                         val file = audioFiles[i]
-                        val globalAyahId = surahAyahs.getOrNull(i)?.id ?: 1
+                        val globalAyahId = getGlobalAyahId(surahId, i)
 
                         val metadata = MediaMetadata.Builder()
                             .setExtras(Bundle().apply { 
@@ -182,7 +205,9 @@ class AudioViewModel @Inject constructor(
                     }
 
                     player.prepare()
-                    player.play()
+                    if (autoPlay) {
+                        player.play()
+                    }
                 } else {
                     playFallback(surahId)
                 }
@@ -223,7 +248,13 @@ class AudioViewModel @Inject constructor(
     }
     
     fun seekTo(position: Long) {
+        _isSeeking = true
+        _currentPosition.value = position
         player.seekTo(position)
+    }
+
+    fun onSeekFinished() {
+        _isSeeking = false
     }
     
     fun skipToNext() {
@@ -266,5 +297,22 @@ class AudioViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        userPrefs.unregisterListener(prefListener)
+    }
+
+    private val surahAyahCounts = intArrayOf(
+        7, 286, 200, 176, 120, 165, 206, 75, 129, 109, 123, 111, 43, 52, 99, 128, 111, 110, 98, 135,
+        112, 78, 118, 64, 77, 227, 93, 88, 69, 60, 34, 30, 73, 54, 45, 83, 182, 88, 75, 85, 54, 53,
+        89, 59, 37, 35, 38, 29, 18, 45, 60, 49, 62, 55, 78, 96, 29, 22, 24, 13, 14, 11, 11, 18, 12,
+        12, 30, 52, 52, 44, 28, 28, 20, 56, 40, 31, 50, 40, 46, 42, 29, 19, 36, 25, 22, 17, 19, 26,
+        30, 20, 15, 21, 11, 8, 8, 19, 5, 8, 8, 11, 11, 8, 3, 9, 5, 4, 7, 3, 6, 3, 5, 4, 5, 6
+    )
+
+    private fun getGlobalAyahId(surahId: Int, ayahIndex: Int): Int {
+        var globalId = 0
+        for (i in 0 until (surahId - 1)) {
+            globalId += surahAyahCounts[i]
+        }
+        return globalId + ayahIndex + 1
     }
 }

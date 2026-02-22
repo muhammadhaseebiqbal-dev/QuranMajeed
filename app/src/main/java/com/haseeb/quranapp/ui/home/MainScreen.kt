@@ -8,10 +8,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -82,15 +82,27 @@ fun MainScreen(
             val audioVm = com.haseeb.quranapp.ui.audio.AudioUtils.getViewModel()
             val isGlobalPlaying by audioVm.isPlaying.collectAsState()
             val activeSurahId by audioVm.currentSurahId.collectAsState()
+            val currentAyahIndex by audioVm.currentAyahIndex.collectAsState()
             
-            if (isGlobalPlaying && activeSurahId != null) {
-                FloatingActionButton(
-                    onClick = { audioVm.togglePlayPause() },
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ) {
-                    Icon(Icons.Default.Stop, contentDescription = "Stop Playback")
-                }
+            if (activeSurahId != null) {
+                ExtendedFloatingActionButton(
+                    onClick = { onResumeClick(activeSurahId!!, currentAyahIndex + 1) },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    icon = {
+                        IconButton(onClick = { audioVm.togglePlayPause() }, modifier = Modifier.size(32.dp)) {
+                            Icon(
+                                if (isGlobalPlaying) Icons.Default.Pause else Icons.Default.PlayArrow, 
+                                contentDescription = if (isGlobalPlaying) "Pause" else "Play",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    text = {
+                        val sName = surahs.find { it.id == activeSurahId }?.nameSimple ?: "Surah"
+                        Text("Active: $sName ${currentAyahIndex + 1}", style = MaterialTheme.typography.labelLarge)
+                    }
+                )
             }
         },
         topBar = {

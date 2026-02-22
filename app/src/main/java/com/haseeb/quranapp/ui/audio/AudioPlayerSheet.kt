@@ -11,18 +11,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+// ViewModel is obtained via AudioUtils.getViewModel() scoped to Activity
 
 import ir.mahozad.multiplatform.wavyslider.material3.WavySlider
 
 @Composable
 fun AudioPlayerSheet(
-    viewModel: AudioViewModel = hiltViewModel(),
+    viewModel: AudioViewModel = AudioUtils.getViewModel(),
     surahId: Int,
     isExpanded: Boolean = false
 ) {
@@ -88,12 +93,29 @@ fun AudioPlayerSheet(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Seekbar
+            // Seekbar with smooth animation
+            var isDragging by remember { mutableStateOf(false) }
+            var dragValue by remember { mutableStateOf(0f) }
+            
+            val rawProgress = if (duration > 0) position.toFloat() / duration.toFloat() else 0f
+            val displayValue = if (isDragging) dragValue else rawProgress
+            val animatedValue by animateFloatAsState(
+                targetValue = displayValue,
+                animationSpec = tween(durationMillis = if (isDragging) 0 else 80),
+                label = "seekbar"
+            )
+            
             WavySlider(
-                value = if (duration > 0) position.toFloat() / duration.toFloat() else 0f,
-                onValueChange = { 
-                     val newPos = (it * duration.toFloat()).toLong()
-                     viewModel.seekTo(newPos)
+                value = animatedValue,
+                onValueChange = { newVal ->
+                    isDragging = true
+                    dragValue = newVal
+                    val newPos = (newVal * duration.toFloat()).toLong()
+                    viewModel.seekTo(newPos)
+                },
+                onValueChangeFinished = {
+                    isDragging = false
+                    viewModel.onSeekFinished()
                 },
                 modifier = Modifier.fillMaxWidth()
             )

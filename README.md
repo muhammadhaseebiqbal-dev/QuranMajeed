@@ -1,7 +1,7 @@
 # Quran Majeed (قرآن مجید)
 
 <div align="center">
-  <img src="app/src/main/assets/QuranMajeed_logo.png" alt="Quran Majeed Logo" width="128" />
+  <img src="fastlane/metadata/android/en-US/images/icon.png" alt="Quran Majeed Logo" width="256" />
   
   <br/>
   
@@ -29,18 +29,18 @@
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="app/src/main/assets/screenshots/1.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/2.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/3.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/4.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/5.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/6.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/7.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/8.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/9.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/10.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/11.jpg" width="200"/>
-  <img src="app/src/main/assets/screenshots/12.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/11.jpg" width="200"/>
+  <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/12.jpg" width="200"/>
 </div>
 
 ---
@@ -49,15 +49,27 @@
 
 Because **Quran Majeed** respects user privacy and avoids tracking, it is designed perfectly for open-source stores.
 
+### 3. F-Droid (Main)
+*Submission is currently pending in the main F-Droid repository.*
+
+<a href="#">
+  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">
+</a>
+
 ### 1. IzzyOnDroid
 You can download the latest official release directly from IzzyOnDroid.
 *(Link will be available here once approved by the Izzy repo)*
 
-### 2. GitHub Releases (Direct APK)
-If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our [Releases Page](../../releases).
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.haseeb.quranapp">
+  <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="60">
+</a>
 
-### 3. F-Droid (Main)
-*Submission is currently pending in the main F-Droid repository.*
+### 2. GitHub Releases (Direct APK)
+If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our Releases Page.
+
+<a href="https://github.com/muhammadhaseebiqbal-dev/QuranMajeed/releases/latest">
+  <img src="https://img.shields.io/badge/Download-GitHub_Releases-181717?style=for-the-badge&logo=github&logoColor=white" alt="Download from GitHub" height="40">
+</a>
 
 ---
 
@@ -67,7 +79,7 @@ This app uses modern Android development practices (Kotlin, Jetpack Compose, Hil
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/YourUsername/QuranApp.git
+   git clone https://github.com/muhammadhaseebiqbal-dev/QuranMajeed.git
    ```
 2. Open the project in **Android Studio** (Flamingo or newer).
 3. Let Gradle sync project dependencies.

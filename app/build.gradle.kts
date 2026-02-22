@@ -13,8 +13,8 @@ android {
         applicationId = "com.haseeb.quranapp"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -88,8 +88,7 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.2.1")
     implementation("androidx.media3:media3-session:1.2.1")
 
-    // AI / ML (TensorFlow Lite)
-    implementation("org.tensorflow:tensorflow-lite-task-text:0.4.4")
+    // AI / ML (Removed)
 
     // Testing
     testImplementation("junit:junit:4.13.2")

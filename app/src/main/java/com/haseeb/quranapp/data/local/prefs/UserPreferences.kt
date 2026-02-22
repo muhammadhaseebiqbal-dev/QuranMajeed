@@ -12,6 +12,14 @@ class UserPreferences @Inject constructor(
 ) {
     private val prefs: SharedPreferences = context.getSharedPreferences("quran_prefs", Context.MODE_PRIVATE)
 
+    fun registerListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.registerOnSharedPreferenceChangeListener(listener)
+    }
+
+    fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
+        prefs.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
     // Current Reciter ID (Default 10: Saud ash-Shuraym)
     var reciterId: Int
         get() = prefs.getInt("reciter_id", 10)

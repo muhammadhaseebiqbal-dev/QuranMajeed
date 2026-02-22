@@ -30,11 +30,11 @@ class SettingsViewModel @Inject constructor(
 
     // Predefined popular options based on API testing
     val reciterOptions = listOf(
-        SelectionOption(10, "Saud ash-Shuraym (Default)"),
-        SelectionOption(7, "Mishari Rashid Al-Afasy"),
-        SelectionOption(2, "AbdulBaset AbdulSamad"),
-        SelectionOption(3, "Abdur-Rahman as-Sudais"),
-        SelectionOption(4, "Abu Bakr al-Shatri")
+        SelectionOption(10, "Saud ash-Shuraym (Arabic) (Default)"),
+        SelectionOption(7, "Mishari Rashid Al-Afasy (Arabic)"),
+        SelectionOption(2, "AbdulBaset AbdulSamad (Arabic)"),
+        SelectionOption(3, "Abdur-Rahman as-Sudais (Arabic)"),
+        SelectionOption(4, "Abu Bakr al-Shatri (Arabic)")
     )
 
     val translationOptions = listOf(

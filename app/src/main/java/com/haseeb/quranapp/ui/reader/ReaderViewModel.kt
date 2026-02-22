@@ -69,6 +69,9 @@ class ReaderViewModel @Inject constructor(
         _tafsirState.value = null
     }
 
+    val currentTafsirId: Int
+        get() = userPrefs.tafsirId
+
     private val _bookmarkedSurahId = MutableStateFlow(userPrefs.bookmarkedSurahId)
     val bookmarkedSurahId: StateFlow<Int> = _bookmarkedSurahId.asStateFlow()
 

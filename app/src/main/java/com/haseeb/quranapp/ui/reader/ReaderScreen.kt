@@ -22,6 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.graphics.toArgb
+import android.widget.TextView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.haseeb.quranapp.data.local.entity.AyahEntity
 
@@ -180,21 +183,30 @@ fun ReaderScreen(
                          CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
                     } else {
                         val tText = tafsirText ?: ""
-                        val isUrduTafsir = tText.any { it in '\u0600'..'\u06FF' }
+                        // 160 = Urdu Ibn Kathir, 159 = Urdu Bayan ul Quran, 16 = Arabic Muyassar
+                        val isRtlTafsir = viewModel.currentTafsirId in listOf(160, 159, 16)
                         
                         Column(modifier = Modifier.weight(1f, fill = false).verticalScroll(scrollState)) {
-                            // Simple HTML stripping if needed, or use AnnotatedString
-                            Text(
-                                text = androidx.core.text.HtmlCompat.fromHtml(
-                                    tText, 
-                                    androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
-                                ).toString().replace(Regex("""\[\d+\]"""), ""), // Also strip bracketed footnote numbers
-                                style = MaterialTheme.typography.bodyLarge.copy(
-                                    fontSize = 18.sp,
-                                    lineHeight = 28.sp
-                                ),
-                                textAlign = if (isUrduTafsir) TextAlign.Right else TextAlign.Left,
-                                modifier = Modifier.fillMaxWidth()
+                            val cleanText = tText.replace(Regex("""(?:\[\d+\]|\(\d+\))"""), "")
+                            val fontColor = MaterialTheme.colorScheme.onSurface.toArgb()
+                            
+                            AndroidView(
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                                factory = { context ->
+                                    TextView(context).apply {
+                                        textSize = 18f
+                                        setLineSpacing(0f, 1.4f)
+                                    }
+                                },
+                                update = { textView ->
+                                    textView.setTextColor(fontColor)
+                                    textView.text = androidx.core.text.HtmlCompat.fromHtml(
+                                        cleanText.replace("\n", "<br>"), 
+                                        androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
+                                    )
+                                    textView.layoutDirection = if (isRtlTafsir) android.view.View.LAYOUT_DIRECTION_RTL else android.view.View.LAYOUT_DIRECTION_LTR
+                                    textView.textAlignment = android.view.View.TEXT_ALIGNMENT_VIEW_START
+                                }
                             )
                         }
                     }
