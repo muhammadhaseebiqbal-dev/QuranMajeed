@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.math.pow
 import java.io.File
 import java.io.FileOutputStream
 import java.net.URL
@@ -142,8 +143,8 @@ class SurahDownloadManager @Inject constructor(
                     val targetFile = File(enDir, "$globalId.mp3")
                     if (!targetFile.exists()) {
                         val url = "https://cdn.islamic.network/quran/audio/192/en.walk/$globalId.mp3"
-                        try { downloadFile(url, targetFile) } catch (e: Exception) {
-                            Log.w(TAG, "EN audio $globalId failed: ${e.message}")
+                        try { downloadFileWithRetry(url, targetFile) } catch (e: Exception) {
+                            Log.w(TAG, "EN audio $globalId failed after retries: ${e.message}")
                         }
                     }
                     completed++
@@ -159,8 +160,8 @@ class SurahDownloadManager @Inject constructor(
                     val targetFile = File(urDir, "$globalId.mp3")
                     if (!targetFile.exists()) {
                         val url = "https://cdn.islamic.network/quran/audio/64/ur.khan/$globalId.mp3"
-                        try { downloadFile(url, targetFile) } catch (e: Exception) {
-                            Log.w(TAG, "UR audio $globalId failed: ${e.message}")
+                        try { downloadFileWithRetry(url, targetFile) } catch (e: Exception) {
+                            Log.w(TAG, "UR audio $globalId failed after retries: ${e.message}")
                         }
                     }
                     completed++
@@ -295,11 +296,31 @@ class SurahDownloadManager @Inject constructor(
         return if (file.exists()) file.readText() else null
     }
 
+    private suspend fun downloadFileWithRetry(urlStr: String, targetFile: File, maxRetries: Int = 3) {
+        var lastException: Exception? = null
+        for (attempt in 1..maxRetries) {
+            try {
+                downloadFile(urlStr, targetFile)
+                return // Success
+            } catch (e: Exception) {
+                lastException = e
+                // Delete partial file if it exists
+                if (targetFile.exists()) targetFile.delete()
+                if (attempt < maxRetries) {
+                    val delayMs = (1000L * 2.0.pow(attempt - 1)).toLong() // 1s, 2s, 4s
+                    Log.w(TAG, "Download attempt $attempt/$maxRetries failed for $urlStr, retrying in ${delayMs}ms")
+                    delay(delayMs)
+                }
+            }
+        }
+        throw lastException ?: Exception("Download failed after $maxRetries attempts")
+    }
+
     private fun downloadFile(urlStr: String, targetFile: File) {
         val url = URL(urlStr)
         val connection = url.openConnection()
-        connection.connectTimeout = 15000
-        connection.readTimeout = 15000
+        connection.connectTimeout = 30000
+        connection.readTimeout = 30000
         connection.connect()
 
         val inputStream = connection.getInputStream()

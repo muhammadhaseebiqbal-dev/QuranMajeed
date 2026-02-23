@@ -188,14 +188,19 @@ class AudioViewModel @Inject constructor(
                             .build()
 
                         val cachedTrans = downloadManager.getCachedTranslationAudio(langCode, globalAyahId)
-                        if (cachedTrans != null) {
-                            mediaItems.add(
-                                MediaItem.Builder()
-                                    .setUri(android.net.Uri.fromFile(cachedTrans))
-                                    .setMediaMetadata(tMetadata)
-                                    .build()
-                            )
+                        val transUri = if (cachedTrans != null) {
+                            android.net.Uri.fromFile(cachedTrans)
+                        } else {
+                            // Fallback to online streaming if cached file is missing
+                            val bitrate = if (langCode == "ur.khan") "64" else "192"
+                            android.net.Uri.parse("https://cdn.islamic.network/quran/audio/$bitrate/$langCode/$globalAyahId.mp3")
                         }
+                        mediaItems.add(
+                            MediaItem.Builder()
+                                .setUri(transUri)
+                                .setMediaMetadata(tMetadata)
+                                .build()
+                        )
                     }
                 }
 
