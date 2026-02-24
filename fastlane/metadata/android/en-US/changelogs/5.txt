@@ -1,0 +1,2 @@
+- Added Monochrome icon support (Material You themed icons) for Android 13+ devices.
+- Minor bug fixes and performance improvements.
