@@ -55,9 +55,8 @@ fun MainScreen(
     // Refresh bookmarks on resume
     androidx.compose.runtime.LaunchedEffect(Unit) {
         viewModel.refreshBookmarks()
-        // Start auto-download in background after a short delay
-        kotlinx.coroutines.delay(5000)
-        downloadManager.startAutoDownload()
+        // Auto-download removed
+
     }
 
     // Tab and Pager State

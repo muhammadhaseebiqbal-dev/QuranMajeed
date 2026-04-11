@@ -51,8 +51,6 @@ class SurahDownloadManager @Inject constructor(
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val activeJobs = mutableMapOf<Int, Job>()
 
-    // Background auto-download job
-    private var autoDownloadJob: Job? = null
 
     init {
         // Scan for already-downloaded surahs on startup
@@ -113,10 +111,8 @@ class SurahDownloadManager @Inject constructor(
                     return@launch
                 }
 
-                // Total items: Arabic audio + EN audio + UR audio + (4 tafseer × ayahCount) + (4 translations × ayahCount)
-                val allTafsirIds = listOf(160, 159, 169, 16)
-                val allTranslationIds = listOf(54, 97, 20, 85)  // Urdu Jalandhry, Urdu Tahir, EN Saheeh, EN Pickthall
-                val totalItems = ayahCount * 3 + ayahCount * allTafsirIds.size + ayahCount * allTranslationIds.size
+                // Total items: Arabic audio + EN audio + UR audio
+                val totalItems = ayahCount * 3
                 var completed = 0
 
                 // Download Arabic audio
@@ -168,65 +164,6 @@ class SurahDownloadManager @Inject constructor(
                     updateState(surahId, DownloadState(progress = completed.toFloat() / totalItems, status = DownloadStatus.DOWNLOADING))
                 }
 
-                // 4. Download ALL Tafseer options for each ayah
-                for (tafsirId in allTafsirIds) {
-                    val tafseerDir = File(context.filesDir, "tafseer/$tafsirId")
-                    tafseerDir.mkdirs()
-                    for (i in 0 until ayahCount) {
-                        if (!isActive) return@launch
-                        val verseKey = "$surahId:${i + 1}"
-                        val targetFile = File(tafseerDir, "$verseKey.txt")
-                        if (!targetFile.exists()) {
-                            try {
-                                val tafsirResponse = api.getTafsir(tafsirId, verseKey)
-                                val text = tafsirResponse.tafsir?.text
-                                if (text != null) {
-                                    targetFile.writeText(text)
-                                }
-                            } catch (e: Exception) {
-                                Log.w(TAG, "Tafseer $tafsirId/$verseKey failed: ${e.message}")
-                            }
-                        }
-                        completed++
-                        updateState(surahId, DownloadState(progress = completed.toFloat() / totalItems, status = DownloadStatus.DOWNLOADING))
-                    }
-                }
-
-                // 5. Download ALL Translation texts for each ayah (for offline switching)
-                for (translationId in allTranslationIds) {
-                    val transDir = File(context.filesDir, "translations/$translationId")
-                    transDir.mkdirs()
-                    // Check if first ayah already cached for this surah
-                    val firstFile = File(transDir, "$surahId:1.txt")
-                    if (!firstFile.exists()) {
-                        try {
-                            val translationResponse = api.getTranslation(translationId)
-                            val translations = translationResponse.translations ?: emptyList()
-                            // The API returns ALL 6236 ayahs, we need to filter for this surah
-                            val globalStart = getGlobalAyahId(surahId, 0) - 1  // 0-indexed
-                            for (i in 0 until ayahCount) {
-                                if (!isActive) return@launch
-                                val idx = globalStart + i
-                                if (idx < translations.size) {
-                                    val text = translations[idx].text
-                                    if (text != null) {
-                                        val verseKey = "$surahId:${i + 1}"
-                                        File(transDir, "$verseKey.txt").writeText(text)
-                                    }
-                                }
-                                completed++
-                                updateState(surahId, DownloadState(progress = completed.toFloat() / totalItems, status = DownloadStatus.DOWNLOADING))
-                            }
-                        } catch (e: Exception) {
-                            Log.w(TAG, "Translation $translationId for Surah $surahId failed: ${e.message}")
-                            completed += ayahCount  // Skip remaining
-                            updateState(surahId, DownloadState(progress = completed.toFloat() / totalItems, status = DownloadStatus.DOWNLOADING))
-                        }
-                    } else {
-                        completed += ayahCount
-                        updateState(surahId, DownloadState(progress = completed.toFloat() / totalItems, status = DownloadStatus.DOWNLOADING))
-                    }
-                }
 
                 updateState(surahId, DownloadState(progress = 1f, status = DownloadStatus.COMPLETED))
                 Log.d(TAG, "Surah $surahId download complete!")
@@ -248,29 +185,6 @@ class SurahDownloadManager @Inject constructor(
         updateState(surahId, DownloadState(status = DownloadStatus.NOT_STARTED))
     }
 
-    /** Start auto-downloading all surahs in the background, one at a time */
-    fun startAutoDownload() {
-        if (autoDownloadJob?.isActive == true) return
-
-        autoDownloadJob = scope.launch {
-            for (surahId in 1..114) {
-                if (!isActive) break
-                val state = _downloadStates.value[surahId]
-                if (state?.status != DownloadStatus.COMPLETED) {
-                    downloadSurah(surahId)
-                    // Wait for this download to complete before starting next
-                    activeJobs[surahId]?.join()
-                    // Small delay to avoid overloading
-                    delay(500)
-                }
-            }
-        }
-    }
-
-    fun stopAutoDownload() {
-        autoDownloadJob?.cancel()
-        autoDownloadJob = null
-    }
 
     /** Get the local cached file path for an Arabic audio ayah, or null if not cached */
     fun getCachedArabicAudio(globalAyahId: Int): File? {
@@ -284,17 +198,6 @@ class SurahDownloadManager @Inject constructor(
         return if (file.exists()) file else null
     }
 
-    /** Get cached tafseer text, or null if not cached */
-    fun getCachedTafseer(tafsirId: Int, verseKey: String): String? {
-        val file = File(context.filesDir, "tafseer/$tafsirId/$verseKey.txt")
-        return if (file.exists()) file.readText() else null
-    }
-
-    /** Get cached translation text, or null if not cached */
-    fun getCachedTranslation(translationId: Int, verseKey: String): String? {
-        val file = File(context.filesDir, "translations/$translationId/$verseKey.txt")
-        return if (file.exists()) file.readText() else null
-    }
 
     private suspend fun downloadFileWithRetry(urlStr: String, targetFile: File, maxRetries: Int = 3) {
         var lastException: Exception? = null

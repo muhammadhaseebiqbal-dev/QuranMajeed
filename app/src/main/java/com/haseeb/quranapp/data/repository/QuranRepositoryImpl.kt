@@ -10,12 +10,45 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import com.google.gson.Gson
+import com.haseeb.quranapp.data.remote.dto.QuranResponse
+
 class QuranRepositoryImpl @Inject constructor(
     private val api: QuranApiService,
     private val dao: QuranDao,
     private val userPrefs: com.haseeb.quranapp.data.local.prefs.UserPreferences,
-    private val downloadManager: com.haseeb.quranapp.data.download.SurahDownloadManager
+    private val downloadManager: com.haseeb.quranapp.data.download.SurahDownloadManager,
+    @ApplicationContext private val context: Context
 ) : QuranRepository {
+
+    private var cachedTafsirId: Int = -1
+    private var cachedTafsirMap: Map<String, String>? = null
+
+    private suspend fun getTafsirFromAssetSafely(tafsirId: Int, verseKey: String): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+        synchronized(this@QuranRepositoryImpl) {
+            if (cachedTafsirId == tafsirId && cachedTafsirMap != null) {
+                return@synchronized cachedTafsirMap?.get(verseKey)
+            }
+            try {
+                val fileName = "tafsir_$tafsirId.json"
+                val inputStream = context.assets.open(fileName)
+                val jsonString = inputStream.bufferedReader().use { it.readText() }
+                
+                val type = object : com.google.gson.reflect.TypeToken<Map<String, Map<String, String>>>() {}.type
+                val result: Map<String, Map<String, String>> = Gson().fromJson(jsonString, type)
+                
+                cachedTafsirMap = result["tafsirs"]
+                cachedTafsirId = tafsirId
+                
+                return@synchronized cachedTafsirMap?.get(verseKey)
+            } catch (e: Exception) {
+                Log.e("QuranRepo", "Failed to load tafsir $tafsirId from assets", e)
+                return@synchronized null
+            }
+        }
+    }
 
     override fun getAllSurahs(): Flow<List<SurahEntity>> {
         return dao.getAllSurahs()
@@ -37,16 +70,13 @@ class QuranRepositoryImpl @Inject constructor(
         return try {
             val resourceId = userPrefs.tafsirId
             
-            // Check local cache first
-            val cached = downloadManager.getCachedTafseer(resourceId, verseKey)
-            if (cached != null) {
-                return Result.success(cached)
+            // Check local bundled assets
+            val text = getTafsirFromAssetSafely(resourceId, verseKey)
+            if (text != null) {
+                return Result.success(text)
             }
             
-            // Fallback to API
-            val response = api.getTafsir(resourceId, verseKey)
-            val text = response.tafsir?.text
-            if (text != null) Result.success(text) else Result.failure(Exception("No tafsir found"))
+            Result.failure(Exception("No bundled tafsir found for $verseKey"))
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -73,8 +103,12 @@ class QuranRepositoryImpl @Inject constructor(
             val ayahCount = dao.getAyahCount()
             
             if (ayahCount == 0) {
-                // Initial fetch
-                val response = api.getUthmaniVerses(limit = 6236)
+                // Initial fetch from pre-packaged asset to avoid OOM
+                Log.d("QuranRepo", "Loading Uthmani verses from assets...")
+                val inputStream = context.assets.open("uthmani_verses.json")
+                val jsonString = inputStream.bufferedReader().use { it.readText() }
+                val response = Gson().fromJson(jsonString, QuranResponse::class.java)
+                
                 val entities = response.verses?.map { dto ->
                     val parts = dto.verse_key.split(":")
                     val surahId = parts.getOrNull(0)?.toIntOrNull() ?: 1
@@ -109,7 +143,7 @@ class QuranRepositoryImpl @Inject constructor(
                 }
             }
 
-            // 3. Sync Translation (Urdu) - Repair/Update
+            // 3. Sync Translation - Repair/Update
             val firstAyah = dao.getAyahsBySurah(1).firstOrNull()?.firstOrNull()
             
             // Force check if translation is missing, length is 0, or user changed translation preference
@@ -117,53 +151,33 @@ class QuranRepositoryImpl @Inject constructor(
                 val translationId = userPrefs.translationId
                 Log.d("QuranRepo", "Syncing Translation... ID: $translationId")
                 
-                // ── CACHE-FIRST: Try local cached translations for instant switching ──
-                val testCached = downloadManager.getCachedTranslation(translationId, "1:1")
-                if (testCached != null) {
-                    // Cached files exist — load instantly from disk
-                    Log.d("QuranRepo", "Loading translation $translationId from local cache (instant)")
-                    val allAyahs = dao.getAllAyahs()
-                    val updatedAyahs = allAyahs.mapNotNull { ayah ->
-                        val verseKey = "${ayah.surahId}:${ayah.ayahNumber}"
-                        val cached = downloadManager.getCachedTranslation(translationId, verseKey)
-                        if (cached != null && cached != ayah.textTranslation) {
-                            ayah.copy(textTranslation = cached)
-                        } else {
-                            null
-                        }
-                    }
-                    if (updatedAyahs.isNotEmpty()) {
-                        Log.d("QuranRepo", "Instant-loaded ${updatedAyahs.size} cached translations")
-                        dao.updateAyahs(updatedAyahs)
-                        userPrefs.lastSyncedTranslationId = translationId
-                    }
-                } else {
-                    // ── FALLBACK: No cache, fetch from API ──
-                    try {
-                        val translationResponse = api.getTranslation(translationId)
-                        val translationsList = translationResponse.translations ?: emptyList()
+                try {
+                    val fileName = "translation_$translationId.json"
+                    val inputStream = context.assets.open(fileName)
+                    val jsonString = inputStream.bufferedReader().use { it.readText() }
+                    val translationResponse = Gson().fromJson(jsonString, com.haseeb.quranapp.data.remote.dto.TranslationResponse::class.java)
+                    val translationsList = translationResponse.translations ?: emptyList()
 
-                        if (translationsList.isNotEmpty()) {
-                            val allAyahs = dao.getAllAyahs()
-                            if (allAyahs.size == translationsList.size) {
-                                val updatedAyahs = allAyahs.zip(translationsList).mapNotNull { (ayah, translationDto) ->
-                                    val newTrans = translationDto.text
-                                    if (newTrans != ayah.textTranslation) {
-                                        ayah.copy(textTranslation = newTrans)
-                                    } else {
-                                        null
-                                    }
-                                }
-                                if (updatedAyahs.isNotEmpty()) {
-                                    Log.d("QuranRepo", "Updating ${updatedAyahs.size} translations from API...")
-                                    dao.updateAyahs(updatedAyahs)
-                                    userPrefs.lastSyncedTranslationId = translationId
+                    if (translationsList.isNotEmpty()) {
+                        val allAyahs = dao.getAllAyahs()
+                        if (allAyahs.size == translationsList.size) {
+                            val updatedAyahs = allAyahs.zip(translationsList).mapNotNull { (ayah, translationDto) ->
+                                val newTrans = translationDto.text
+                                if (newTrans != ayah.textTranslation) {
+                                    ayah.copy(textTranslation = newTrans)
+                                } else {
+                                    null
                                 }
                             }
+                            if (updatedAyahs.isNotEmpty()) {
+                                Log.d("QuranRepo", "Updating ${updatedAyahs.size} translations from bundled asset...")
+                                dao.updateAyahs(updatedAyahs)
+                                userPrefs.lastSyncedTranslationId = translationId
+                            }
                         }
-                    } catch (e: Exception) {
-                        Log.e("QuranRepo", "Translation sync failed (no cache, no network)", e)
                     }
+                } catch (e: Exception) {
+                    Log.e("QuranRepo", "Translation sync failed from assets", e)
                 }
             }
             

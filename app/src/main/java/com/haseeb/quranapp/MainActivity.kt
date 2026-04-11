@@ -44,6 +44,16 @@ class MainActivity : ComponentActivity() {
             }
         }
         
+        // Request max refresh rate (120Hz/90Hz) if supported by device
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val modes = windowManager.defaultDisplay.supportedModes
+            modes.maxByOrNull { it.refreshRate }?.let { maxMode ->
+                val params = window.attributes
+                params.preferredDisplayModeId = maxMode.modeId
+                window.attributes = params
+            }
+        }
+        
         // Schedule daily local notification
         val dailyWorkRequest = PeriodicWorkRequestBuilder<DailyHadithWorker>(24, TimeUnit.HOURS)
             .setInitialDelay(2, TimeUnit.HOURS) // Show the first one slightly offset if possible

@@ -1,0 +1,3 @@
+• Full Offline Support: We've completely bundled the core Translations and Tafsirs into the app. Experience instant loading and seamlessly read the Quran offline.
+• Audio-only Downloads: Manual downloads now intelligently fetch just the Recitation audio files. Background auto-download has been removed for a lighter footprint.
+• 120Hz/90Hz Support: Smooth fluid scrolling with new high-refresh-rate optimizations.

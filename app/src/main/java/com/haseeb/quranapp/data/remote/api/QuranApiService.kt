@@ -16,7 +16,8 @@ interface QuranApiService {
     // Fetch generic resource URL
     @GET("v4/quran/translations/{resourceId}")
     suspend fun getTranslation(
-        @retrofit2.http.Path("resourceId") resourceId: Int
+        @retrofit2.http.Path("resourceId") resourceId: Int,
+        @Query("chapter_number") chapterNumber: Int? = null
     ): com.haseeb.quranapp.data.remote.dto.TranslationResponse
 
     @GET("v4/tafsirs/{resourceId}/by_ayah/{verseKey}")
@@ -24,6 +25,12 @@ interface QuranApiService {
         @retrofit2.http.Path("resourceId") resourceId: Int,
         @retrofit2.http.Path("verseKey") verseKey: String
     ): com.haseeb.quranapp.data.remote.dto.TafsirResponse
+
+    @GET("v4/tafsirs/{resourceId}/by_chapter/{chapterId}")
+    suspend fun getTafsirsByChapter(
+        @retrofit2.http.Path("resourceId") resourceId: Int,
+        @retrofit2.http.Path("chapterId") chapterId: Int
+    ): com.haseeb.quranapp.data.remote.dto.TafsirChapterResponse
 
     // Fetch Audio Files (Verse by Verse) for a Chapter
     @GET("v4/recitations/{recitationId}/by_chapter/{chapterId}")

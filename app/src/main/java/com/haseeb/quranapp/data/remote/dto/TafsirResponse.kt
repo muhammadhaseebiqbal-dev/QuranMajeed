@@ -4,6 +4,10 @@ data class TafsirResponse(
     val tafsir: TafsirItemDto?
 )
 
+data class TafsirChapterResponse(
+    val tafsirs: List<TafsirItemDto>?
+)
+
 data class TafsirItemDto(
     val resource_id: Int,
     val resource_name: String?,

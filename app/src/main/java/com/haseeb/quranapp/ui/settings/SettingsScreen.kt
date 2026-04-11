@@ -71,7 +71,7 @@ fun SettingsScreen(
             )
 
             Text(
-                text = "Note: Changes to Translation or Tafsir will apply the next time you open a Surah. Audio changes apply immediately to the next downloaded file.",
+                text = "Note: Translations and Tafsirs are bundled for instant offline reading. Downloading a Surah will now only fetch the Audio Recitation.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
