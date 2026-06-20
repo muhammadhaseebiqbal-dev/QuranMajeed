@@ -24,6 +24,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.haseeb.quranapp.ui.home.MainScreen
@@ -73,7 +75,10 @@ class MainActivity : ComponentActivity() {
             QuranAppTheme {
                 val navController = rememberNavController()
                 
-                NavHost(navController = navController, startDestination = Screen.Home.route) {
+                NavHost(
+                    navController = navController,
+                    startDestination = Screen.Home.route
+                ) {
                     composable(Screen.Home.route) {
                         MainScreen(
                             onSurahClick = { surahId ->

@@ -27,4 +27,6 @@ object NetworkModule {
     fun provideQuranApiService(retrofit: Retrofit): QuranApiService {
         return retrofit.create(QuranApiService::class.java)
     }
+
+
 }

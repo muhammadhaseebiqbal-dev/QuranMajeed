@@ -23,30 +23,39 @@ class QuranRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : QuranRepository {
 
-    private var cachedTafsirId: Int = -1
-    private var cachedTafsirMap: Map<String, String>? = null
 
     private suspend fun getTafsirFromAssetSafely(tafsirId: Int, verseKey: String): String? = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
-        synchronized(this@QuranRepositoryImpl) {
-            if (cachedTafsirId == tafsirId && cachedTafsirMap != null) {
-                return@synchronized cachedTafsirMap?.get(verseKey)
+        try {
+            val fileName = "tafsir_$tafsirId.json"
+            var resultText: String? = null
+            
+            context.assets.open(fileName).use { inputStream ->
+                com.google.gson.stream.JsonReader(inputStream.reader()).use { reader ->
+                    reader.beginObject()
+                    while (reader.hasNext()) {
+                        val name = reader.nextName()
+                        if (name == "tafsirs") {
+                            reader.beginObject()
+                            while (reader.hasNext()) {
+                                val key = reader.nextName()
+                                if (key == verseKey) {
+                                    resultText = reader.nextString()
+                                    break
+                                } else {
+                                    reader.skipValue()
+                                }
+                            }
+                            break
+                        } else {
+                            reader.skipValue()
+                        }
+                    }
+                }
             }
-            try {
-                val fileName = "tafsir_$tafsirId.json"
-                val inputStream = context.assets.open(fileName)
-                val jsonString = inputStream.bufferedReader().use { it.readText() }
-                
-                val type = object : com.google.gson.reflect.TypeToken<Map<String, Map<String, String>>>() {}.type
-                val result: Map<String, Map<String, String>> = Gson().fromJson(jsonString, type)
-                
-                cachedTafsirMap = result["tafsirs"]
-                cachedTafsirId = tafsirId
-                
-                return@synchronized cachedTafsirMap?.get(verseKey)
-            } catch (e: Exception) {
-                Log.e("QuranRepo", "Failed to load tafsir $tafsirId from assets", e)
-                return@synchronized null
-            }
+            return@withContext resultText
+        } catch (e: Exception) {
+            Log.e("QuranRepo", "Failed to load tafsir $tafsirId from assets", e)
+            return@withContext null
         }
     }
 
@@ -106,8 +115,8 @@ class QuranRepositoryImpl @Inject constructor(
                 // Initial fetch from pre-packaged asset to avoid OOM
                 Log.d("QuranRepo", "Loading Uthmani verses from assets...")
                 val inputStream = context.assets.open("uthmani_verses.json")
-                val jsonString = inputStream.bufferedReader().use { it.readText() }
-                val response = Gson().fromJson(jsonString, QuranResponse::class.java)
+                val response = Gson().fromJson(inputStream.reader(), QuranResponse::class.java)
+                inputStream.close()
                 
                 val entities = response.verses?.map { dto ->
                     val parts = dto.verse_key.split(":")
@@ -154,8 +163,8 @@ class QuranRepositoryImpl @Inject constructor(
                 try {
                     val fileName = "translation_$translationId.json"
                     val inputStream = context.assets.open(fileName)
-                    val jsonString = inputStream.bufferedReader().use { it.readText() }
-                    val translationResponse = Gson().fromJson(jsonString, com.haseeb.quranapp.data.remote.dto.TranslationResponse::class.java)
+                    val translationResponse = Gson().fromJson(inputStream.reader(), com.haseeb.quranapp.data.remote.dto.TranslationResponse::class.java)
+                    inputStream.close()
                     val translationsList = translationResponse.translations ?: emptyList()
 
                     if (translationsList.isNotEmpty()) {

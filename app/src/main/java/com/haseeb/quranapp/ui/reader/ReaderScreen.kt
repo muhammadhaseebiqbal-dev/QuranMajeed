@@ -13,6 +13,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -238,8 +240,8 @@ fun AyahItem(
             Text(
                 text = ayah.textUthmani,
                 style = MaterialTheme.typography.headlineMedium.copy(
-                    fontFamily = FontFamily.Serif, 
-                    lineHeight = 40.sp,
+                    fontFamily = androidx.compose.ui.text.font.FontFamily(androidx.compose.ui.text.font.Font(com.haseeb.quranapp.R.font.amiri_quran)), 
+                    lineHeight = 50.sp,
                     color = MaterialTheme.colorScheme.onSurface 
                 ),
                 textAlign = TextAlign.End,
@@ -253,20 +255,58 @@ fun AyahItem(
                 val transText = ayah.textTranslation.toString()
                 // Simple Arabic/Urdu character detection
                 val isUrdu = transText.any { it in '\u0600'..'\u06FF' }
-                // Strip <sup> and other HTML tags returned by API
-                val cleanTextHtml = androidx.core.text.HtmlCompat.fromHtml(
-                    transText, 
-                    androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
-                ).toString()
                 
-                // Remove footnote numbers like [1], (1), or just digits left over from HTML stripping
-                val cleanText = cleanTextHtml.replace(Regex("""(?:\[\d+\]|\(\d+\)|\b\d+\b)"""), "").replace(Regex("""\s+"""), " ").trim()
-
+                // Strip <sup> and other HTML tags returned by API efficiently
+                val cleanText = androidx.core.text.HtmlCompat.fromHtml(
+                        transText, 
+                        androidx.core.text.HtmlCompat.FROM_HTML_MODE_COMPACT
+                    ).toString().replace(Regex("""\s+"""), " ").trim()
+                
+                val annotatedString = androidx.compose.ui.text.buildAnnotatedString {
+                    // Match numbers that might be footnotes (standalone or bracketed)
+                    val regex = Regex("""\[?(\d{1,3})\]?""")
+                    var lastIndex = 0
+                    regex.findAll(cleanText).forEach { matchResult ->
+                        append(cleanText.substring(lastIndex, matchResult.range.first))
+                        // We add a tiny space before and after the inline content to make it look nicer
+                        append(" ")
+                        appendInlineContent(id = "footnote", alternateText = matchResult.groupValues[1])
+                        append(" ")
+                        lastIndex = matchResult.range.last + 1
+                    }
+                    append(cleanText.substring(lastIndex))
+                }
+                
+                val inlineContent = mapOf(
+                    "footnote" to androidx.compose.foundation.text.InlineTextContent(
+                        androidx.compose.ui.text.Placeholder(
+                            width = 22.sp,
+                            height = 22.sp,
+                            placeholderVerticalAlign = androidx.compose.ui.text.PlaceholderVerticalAlign.TextCenter
+                        )
+                    ) { text ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(MaterialTheme.colorScheme.primary, shape = androidx.compose.foundation.shape.CircleShape),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = text,
+                                color = MaterialTheme.colorScheme.onPrimary,
+                                fontSize = 11.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                            )
+                        }
+                    }
+                )
+                
                 Text(
-                    text = cleanText,
+                    text = annotatedString,
+                    inlineContent = inlineContent,
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontSize = 18.sp,
-                        lineHeight = 28.sp
+                        lineHeight = 32.sp
                     ),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = if (isUrdu) TextAlign.Right else TextAlign.Left,

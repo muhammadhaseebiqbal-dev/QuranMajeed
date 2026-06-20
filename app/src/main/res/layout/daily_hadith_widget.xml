@@ -3,9 +3,9 @@
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/widget_bg"
+    android:background="@drawable/widget_bg_modern"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
     <!-- Header Area -->
     <LinearLayout
@@ -13,12 +13,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginBottom="6dp">
+        android:layout_marginBottom="12dp">
 
         <TextView
             android:layout_width="4dp"
-            android:layout_height="20dp"
-            android:background="#FFCA28" />
+            android:layout_height="18dp"
+            android:background="#E5B25D" />
 
         <TextView
             android:id="@+id/widget_title"
@@ -26,34 +26,51 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="Daily Hadith | حدیثِ مبارکہ"
-            android:textColor="#E8EAF6"
-            android:textSize="11sp"
-            android:letterSpacing="0.03"
-            android:textStyle="bold" />
+            android:textColor="#E2E8F0"
+            android:textSize="12sp"
+            android:letterSpacing="0.05"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
     </LinearLayout>
 
-    <!-- English Content — Full text, no truncation -->
-    <TextView
-        android:id="@+id/widget_text"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Loading today's hadith..."
-        android:textColor="#FFFFFF"
-        android:textSize="11sp"
-        android:lineSpacingExtra="2dp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
 
-    <!-- Urdu Content — Full text, RTL -->
-    <TextView
-        android:id="@+id/widget_text_ur"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textColor="#B0BEC5"
-        android:textSize="11sp"
-        android:lineSpacingExtra="2dp"
-        android:gravity="end"
-        android:textDirection="rtl"
-        android:layout_marginTop="4dp" />
+        <!-- English Content -->
+        <TextView
+            android:id="@+id/widget_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading today's hadith..."
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"
+            android:lineSpacingExtra="5dp"
+            android:ellipsize="end"
+            android:maxLines="6" />
+
+        <!-- Urdu Content -->
+        <TextView
+            android:id="@+id/widget_text_ur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:lineSpacingExtra="6dp"
+            android:gravity="end"
+            android:textDirection="rtl"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-black"
+            android:ellipsize="end"
+            android:maxLines="5" />
+            
+    </LinearLayout>
 
     <!-- Footer Area -->
     <TextView
@@ -61,10 +78,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="- Source"
-        android:textColor="#FFCA28"
-        android:textSize="10sp"
-        android:textStyle="italic|bold" />
+        android:textColor="#E5B25D"
+        android:textSize="11sp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="italic" />
 
 </LinearLayout>

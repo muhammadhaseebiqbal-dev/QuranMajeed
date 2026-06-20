@@ -49,13 +49,7 @@ class DailyHadithWidget : AppWidgetProvider() {
 
     private fun getRandomHadith(context: Context): Triple<String, String, String>? {
         return try {
-            val inputStream: InputStream = context.assets.open("hadiths.json")
-            val size = inputStream.available()
-            val buffer = ByteArray(size)
-            inputStream.read(buffer)
-            inputStream.close()
-            
-            val jsonString = String(buffer, Charsets.UTF_8)
+            val jsonString = context.assets.open("hadiths.json").bufferedReader().use { it.readText() }
             val jsonArray = JSONArray(jsonString)
             
             if (jsonArray.length() > 0) {
