@@ -49,14 +49,7 @@
 
 Because **Quran Majeed** respects user privacy and avoids tracking, it is designed perfectly for open-source stores.
 
-### 1. F-Droid (Main)
-*Submission is currently pending in the main F-Droid repository.*
-
-<a href="#">
-  <img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="60">
-</a>
-
-### 2. IzzyOnDroid
+### 1. IzzyOnDroid
 You can download the latest official release directly from IzzyOnDroid.
 *(Link will be available here once approved by the Izzy repo)*
 
@@ -64,7 +57,7 @@ You can download the latest official release directly from IzzyOnDroid.
   <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="60">
 </a>
 
-### 3. GitHub Releases (Direct APK)
+### 2. GitHub Releases (Direct APK)
 If you don't use F-Droid, you can grab the raw `app-release.apk` directly from our Releases Page.
 
 <a href="https://github.com/muhammadhaseebiqbal-dev/QuranMajeed/releases/latest">
